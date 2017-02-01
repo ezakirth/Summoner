@@ -163,7 +163,7 @@ function draw()
 
     DeltaTime = 1/60;
     ElapsedTime += DeltaTime;
-    requestAnimationFrame(draw);
+//    requestAnimationFrame(draw);
 }
 
 
