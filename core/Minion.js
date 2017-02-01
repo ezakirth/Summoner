@@ -1,8 +1,6 @@
-Minion = class();
-
-function Minion:init(ent, owner)
+function Minion(ent, owner)
 {
-    this.model = Entity(graphics["creature"], this);
+    this.model = new Entity(graphics.creatures[ent.color], this);
     
     this.life = ent.life;
     this.power = ent.power;
@@ -15,17 +13,17 @@ function Minion:init(ent, owner)
     this.abilities = ent.abilities;
     this.icon = ent.icon;
     this.buffs = "";
-    this.tempabilities = Array()
+    this.tempAbilities = Array()
     this.baseLife = this.life;
     this.basePower = this.power;
     
-    this:checkAbilities();
-    this:updateStats();
+    this.checkAbilities();
+    this.updateStats();
     
-    this.pos = vec2();
+    this.pos = new vec2();
     this.owner = owner;
     this.controller = owner;
-    this.spawn = vec2(owner.pos.x + 64*owner.side, owner.pos.y);
+    this.spawn = new vec2(owner.pos.x + 64*owner.side, owner.pos.y);
     
     this.inDuel = false;
     this.dying = false;
@@ -34,23 +32,24 @@ function Minion:init(ent, owner)
     this.status = "idle";
     
     
-    this.timers = {}
-    this.attackTimer = Timer(1, "attack");
-    this.deathTimer = Timer(.5, "death");
-    this.spawnTimer = Timer(.5, "spawn");
-    this.unsummonTimer = Timer(.5, "unsummon");
+    this.timers = Array();
+    this.attackTimer = new Timer(1, "attack");
+    this.deathTimer = new Timer(.5, "death");
+    this.spawnTimer = new Timer(.5, "spawn");
+    this.unsummonTimer = new Timer(.5, "unsummon");
     
     this.new = true;
     
-    if ( this.goblinbuff ) {
+    if ( this.goblinbuff )
+    {
         table.insert(this.owner.auras, "goblinbuff");
     }
     
     
-    this:respawn();
+    this.respawn();
 }
 
-function Minion:checkAbilities()
+Minion.prototype.checkAbilities = function()
 {
     this.haste = false;
     this.firststrike = false;
@@ -66,73 +65,86 @@ function Minion:checkAbilities()
     this.spellproof = false;
     this.spellburn = false;
     
-    for ( _, ability in ipairs(this.abilities) ) {
+    this.abilities.forEach((ability) =>
+    {
         this[ability] = true;
-    }
+    });
     
-    for ( _, ability in ipairs(this.tempAbilities) ) {
+    this.tempAbilities.forEach((ability) =>
+    {
         this[ability] = true;
-    }
+    });
     
     var buffs = "";
-    if ( this.firststrike ) {
-        buffs = buffs .. "🔪";
+    if ( this.firststrike )
+    {
+        buffs = buffs + "🔪";
     }
-    if ( this.trample ) {
-        buffs = buffs .. "🐘";
+    if ( this.trample )
+    {
+        buffs = buffs + "🐘";
     }
-    if ( this.lifelink ) {
-        buffs = buffs .. "❤️";
+    if ( this.lifelink )
+    {
+        buffs = buffs + "❤️";
     }
-    if ( this.flying ) {
-        buffs = buffs .. "✈️";
+    if ( this.flying )
+    {
+        buffs = buffs + "✈️";
     }
-    if ( this.haste ) {
-        buffs = buffs .. "🐇";
+    if ( this.haste )
+    {
+        buffs = buffs + "🐇";
     }
-    if ( this.deathtouch ) {
-        buffs = buffs .. "💀";
+    if ( this.deathtouch )
+    {
+        buffs = buffs + "💀";
     }
-    if ( this.spellproof ) {
-        buffs = buffs .. "✳️";
+    if ( this.spellproof )
+    {
+        buffs = buffs + "✳️";
     }
-    if ( this.spellburn ) {
-        buffs = buffs .. "💥";
+    if ( this.spellburn )
+    {
+        buffs = buffs + "💥";
     }
-    if ( this.regeneration and not this.noregeneration ) {
-        buffs = buffs .. "♻️";
+    if ( this.regeneration && ! this.noregeneration )
+    {
+        buffs = buffs + "♻️";
     }
     this.buffs = buffs;
 }
 
-function Minion:updateStats()
+Minion.prototype.updateStats = function()
 {
-    this.lifeText = this:setStat(this.life);
-    this.powerText = this:setStat(this.power);
+    this.lifeText = this.setStat(this.life);
+    this.powerText = this.setStat(this.power);
 }
 
-function Minion:respawn()
+Minion.prototype.respawn = function()
 {
     this.inDuel = false;
-    this.duel = nil;
+    this.duel = null;
     
-    this.tempabilities = Array()
+    this.tempabilities = Array();
     
     this.controller = this.owner;
     
     this.power = this.basePower;
-    if ( this.life > this.baseLife ) {
+    if ( this.life > this.baseLife )
+    {
         this.life = this.baseLife;
     }
     
-    this:checkAbilities();
+    this.checkAbilities();
     
-    if ( not this.new and this.respawnliability ) {
+    if ( ! this.new && this.respawnliability )
+    {
         this.owner.life = this.owner.life - 1;
-        this.owner:updateStats();
+        this.owner.updateStats();
     }
     
-    this:updateStats();
+    this.updateStats();
     
     this.pos.x = this.spawn.x;
     this.pos.y = this.spawn.y;
@@ -140,113 +152,148 @@ function Minion:respawn()
     this.new = false;
 }
 
-function Minion:activeTimer()
+Minion.prototype.activeTimer = function()
 {
-    var timer = this.timers[1];
-    if ( timer ) {
+    var timer = this.timers[0];
+    if ( timer )
+    {
         return timer.id;
-    } else {
-        if ( this.inDuel ) {
+    }
+    else
+    {
+        if ( this.inDuel )
+        {
             return "duel";
-        } else {
+        }
+        else
+        {
             return false;
         }
     }
 }
 
-function Minion:checkEnemy()
+Minion.prototype.checkEnemy = function()
 {
-    for ( _, minion in ipairs(this.controller.opponent.summons) ) {
-        if ( minion ~= this and not minion:activeTimer() and this.pos:dist(minion.pos) < 64 ) {
-            if ( (not this.flying and not minion.flying) or (this.flying and minion.flying) ) {
-                duels:add(this, minion);
-                break;
+    this.controller.opponent.summons.some((minion) =>
+    {
+        if ( minion != this && ! minion.activeTimer() && this.pos.dist(minion.pos) < 64 )
+        {
+            if ( (! this.flying && ! minion.flying) || (this.flying && minion.flying) )
+            {
+                duels.add(this, minion);
+                return true;
             }
         }
-    }
+    });
 }
 
-function Minion:animate()
+Minion.prototype.animate = function()
 {
     this.model.timer = this.model.timer + DeltaTime;
     
-    if ( this:activeTimer() == "spawn" or this:activeTimer() == "unsummon" ) {
+    if ( this.activeTimer() == "spawn" || this.activeTimer() == "unsummon" )
+    {
         this.status = "idle";
     }
-    if ( this.life <= 0 and not this.dying ) {
-        this.timers = {}
+    if ( this.life <= 0 && ! this.dying )
+    {
+        this.timers = Array();
         table.insert(this.timers, this.deathTimer);
         this.dying = true;
         this.status = "idle";
     }
     
-    var timer = this.timers[1];
-    if ( timer ) {
+    var timer = this.timers[0];
+    if ( timer )
+    {
         
-        if ( not timer.started ) {
-            timer:reset();
+        if ( ! timer.started )
+        {
+            timer.reset();
         }
-        if ( timer:isDone() ) {
+        if ( timer.isDone() )
+        {
             
-            if ( timer.id == "unsummon" ) {
-                this:respawn();
+            if ( timer.id == "unsummon" )
+            {
+                this.respawn();
             }
             
-            if ( timer.id == "death" ) {
-                if ( this.deathrattle1 ) {
-                    this.controller:resolveSpell(specials.deathrattle1);
+            if ( timer.id == "death" )
+            {
+                if ( this.deathrattle1 )
+                {
+                    this.controller.resolveSpell(specials.deathrattle1);
                 }
                 
-                if ( this.regeneration and not this.noregeneration and this.owner.mana >= 2 ) {
+                if ( this.regeneration && ! this.noregeneration && this.owner.mana >= 2 )
+                {
                     this.life = this.baseLife;
                     this.dying = false;
                     this.owner.mana = this.owner.mana - 2;
-                    this:respawn();
-                } else {
-                    if ( this.goblinbuff ) {
-                        for ( index, aura in ipairs(this.owner.auras) ) {
-                            if ( aura == "goblinbuff" ) {
-                                this.owner.auras[index] = nil;
-                                break;
+                    this.respawn();
+                }
+                else
+                {
+                    if ( this.goblinbuff )
+                    {
+                        this.owner.auras.some((aura, index) =>
+                        {
+                            if ( aura == "goblinbuff" )
+                            {
+                                this.owner.auras[index] = null;
+                                return true;
                             }
-                        }
+                        });
                     }
                     
-                    crystals:addShards(vec3(this.pos.x, this.pos.y, this.cost/2));
+                    crystals.addShards(vec3(this.pos.x, this.pos.y, this.cost/2));
                     this.dead = true;
                 }
             }
             
-            if ( timer.id == "attack" ) {
-                if ( this.life > 0 ) {
+            if ( timer.id == "attack" )
+            {
+                if ( this.life > 0 )
+                {
                     var shielding = 1;
-                    if ( this.controller.opponent.shielding ) {
+                    if ( this.controller.opponent.shielding )
+                    {
                         shielding = 2;
                     }
-                    if ( this.lifelink ) {
+                    if ( this.lifelink )
+                    {
                         this.controller.life = this.controller.life + this.power;
                     }
-                    this.controller.opponent.life = this.controller.opponent.life - math.floor(this.power/shielding);
-                    this.controller.opponent.lifeText = this:setStat(this.controller.opponent.life);
+                    this.controller.opponent.life = this.controller.opponent.life - Math.floor(this.power/shielding);
+                    this.controller.opponent.lifeText = this.setStat(this.controller.opponent.life);
                 }
             }
             
-            table.remove(this.timers, 1);
+            table.remove(this.timers, 0);
         }
-    } else {
-        if ( not this:activeTimer() ) {
-            if ( this.blocking and not this.for (ceattack ) ) {
+    }
+    else
+    {
+        if ( ! this.activeTimer() )
+        {
+            if ( this.blocking && ! this.forceattack )
+            {
                 this.status = "blocking";
-            } else {
+            }
+            else
+            {
                 this.status = "moving";
             }
-            this:checkEnemy();
-            this:move();
+            this.checkEnemy();
+            this.move();
         }
-        if ( this.inDuel ) {
+        if ( this.inDuel )
+        {
             this.status = "moving";
             
-            if ( this.duel.ready ) {
+            if ( this.duel.ready )
+            {
                 this.status = "attack";
             }
         }
@@ -254,56 +301,64 @@ function Minion:animate()
     }
 }
 
-function Minion:isVisible()
+Minion.prototype.isVisible = function()
 {
-    return this.unsummonTimer:isDone();
+    return this.unsummonTimer.isDone();
 }
 
-function Minion:move()
+Minion.prototype.move = function()
 {
     var haste = 0;
-    if ( this.haste ) {
+    if ( this.haste )
+    {
         haste = 1;
     }
-    
-    if ( not this.blocking or this.for (ceattack ) ) {
-        var dir = (this.controller.opponent.pos - this.pos):normalize();
-        this.pos = this.pos + dir * (this.speed + haste);
+    if ( ! this.blocking || this.forceattack )
+    {
+        var dir = this.controller.opponent.pos.substract(this.pos).normalize();
+        this.pos.x += dir.x * (this.speed + haste);
+        this.pos.y += dir.y * (this.speed + haste);
     }
     
-    if ( not this.inDuel and this.pos:dist(this.controller.opponent.pos) < 96 ) {
+    if ( ! this.inDuel && this.pos.dist(this.controller.opponent.pos) < 96 )
+    {
         table.insert(this.timers, this.attackTimer);
         this.status = "attack";
         table.insert(this.timers, this.unsummonTimer);
     }
 }
 
-function Minion:render()
+Minion.prototype.render = function()
 {
     var tmp_action = "moving";
-    if ( this.blocking and not this.for (ceattack ) ) {
+    if ( this.blocking && ! this.forceattack ) 
+    {
         tmp_action = "blocking";
     }
     
     
-    var action = this:activeTimer() or tmp_action;
+    var action = this.activeTimer() || tmp_action;
     
     
     pushMatrix();
     translate(this.spawn.x,this.spawn.y-20);
-    scale(2 + math.sin(ElapsedTime*5)/10,2);
-    sprite("Dropbox:Spawn", 0, 0, 64, 32);
+    scale(2 + Math.sin(ElapsedTime*5)/10,2);
+    sprite("Dropbox.Spawn", 0, 0, 64, 32);
     popMatrix();
     
-    if ( this:isVisible() ) {
+    if ( this.isVisible() )
+    {
         pushMatrix();
         translate(this.pos.x,this.pos.y);
         
         fill(255, 181, 0, 255);
         
-        if ( this.controller.side == 1 ) {
+        if ( this.controller.side == 1 )
+        {
             stroke(0, 0, 255, 255);
-        } else {
+        }
+        else
+        {
             stroke(255, 0, 0, 255);
         }
         
@@ -313,15 +368,21 @@ function Minion:render()
             flying = 40;
         }
         
-        if ( action == "moving" ) {
-            sprite("Dropbox:Shadow", 0, -30, 128+math.sin(ElapsedTime*6)*10 - flying, 64 - flying);
-        } else {
-            sprite("Dropbox:Shadow", 0, -30, 128+math.sin(ElapsedTime*2)*10 - flying, 64 - flying);
+        if ( action == "moving" )
+        {
+            sprite("Dropbox.Shadow", 0, -30, 128+Math.sin(ElapsedTime*6)*10 - flying, 64 - flying);
+        }
+        else
+        {
+            sprite("Dropbox.Shadow", 0, -30, 128+Math.sin(ElapsedTime*2)*10 - flying, 64 - flying);
         }
         
-        if ( cartoon ) {
-            this.model:draw();
-        } else {
+        if ( cartoon )
+        {
+            this.model.draw();
+        }
+        else
+        {
             rect(-30, -30 + flying, 60, 60);
         }
         
@@ -344,11 +405,12 @@ function Minion:render()
 
 
 // convert numeral stats to graphics so it can be displayed;
-function Minion:setStat(val)
+Minion.prototype.setStat = function(val)
 {
     var txt = "";
-    for ( i=1, val ) {
-        txt = txt.."|";
+    for ( var i=1; i<=val; i++ )
+    {
+        txt = txt + "|";
     }
     return txt;
 }

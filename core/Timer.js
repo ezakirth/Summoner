@@ -1,8 +1,6 @@
-Timer = class();
-
-function Timer:init(sec, id)
+function Timer(sec, id)
 {
-    // you can accept and set parameters here;
+    // you can accept && set parameters here;
     this.delay = sec;
     this.max = ElapsedTime + this.delay;
     this.done = true;
@@ -10,16 +8,17 @@ function Timer:init(sec, id)
     this.id = id;
 }
 
-function Timer:reset()
+Timer.prototype.reset = function()
 {
     this.done = false;
     this.started = true;
     this.max = ElapsedTime + this.delay;
 }
 
-function Timer:isDone()
+Timer.prototype.isDone = function()
 {
-    if ( ElapsedTime > this.max ) {
+    if ( ElapsedTime > this.max )
+    {
         this.done = true;
         this.started = false;
     }
