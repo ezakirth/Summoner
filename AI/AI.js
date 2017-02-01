@@ -71,7 +71,7 @@ AI.prototype.moveTo = function(action)
     else
     {
         this.player.status = "moving";
-        var dir = (pos.substract(this.player.pos)).normalize();
+        var dir = (pos.subtract(this.player.pos)).normalize();
         this.player.pos.x += dir.x * (this.player.speed);
         this.player.pos.y += dir.y * (this.player.speed);
     }

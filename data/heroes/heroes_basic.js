@@ -20,8 +20,8 @@ heroes.basic = {
             life : 10,
             power : 1,
             speed : 2,
-            mana : 10,
-            crystals : 10,
+            mana : 0,
+            crystals : 0,
     },
     green : {
             type : "summoner",

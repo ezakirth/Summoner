@@ -315,7 +315,7 @@ Minion.prototype.move = function()
     }
     if ( ! this.blocking || this.forceattack )
     {
-        var dir = this.controller.opponent.pos.substract(this.pos).normalize();
+        var dir = this.controller.opponent.pos.subtract(this.pos).normalize();
         this.pos.x += dir.x * (this.speed + haste);
         this.pos.y += dir.y * (this.speed + haste);
     }
