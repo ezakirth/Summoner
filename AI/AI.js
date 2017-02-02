@@ -43,10 +43,21 @@ AI.prototype.findJob = function()
     }
     else
     {
-        if ( this.player.mana >= 1 && this.player.summons.length < 5)
+        if ( this.player.mana >= 1 && this.player.summons.length < 3)
         {
             this.player.doAction(creatures.red.raging_goblin);
         }
+        else
+        if ( this.player.mana >= 2 && this.player.summons.length < 5)
+        {
+            this.player.doAction(creatures.red.goblin_hero);
+        }
+        else
+        if ( this.player.mana >= 2 && this.player.summons.length == 5)
+        {
+            this.player.doAction(sorcery.red.reckless_charge);
+        }
+        
     }
 }
 

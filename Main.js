@@ -85,7 +85,7 @@ function setup()
     
     setContext();
 
-    p1.doAction(creatures.black.deaths_head_buzzard);    
+    //p1.doAction(creatures.black.deaths_head_buzzard);    
 
     ai = new AI(p2);
     
