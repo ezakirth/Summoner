@@ -13,7 +13,7 @@ function setup()
     fill(255, 255, 255, 255);
     
     // hero;
-    p1 = new Hero(heroes.basic.black);
+    p1 = new Hero(heroes.basic.black, true);
     p2 = new Hero(heroes.basic.blue);
     p1.opponent = p2;
     p2.opponent = p1;
@@ -21,6 +21,48 @@ function setup()
     p2.pos = new vec2(WIDTH - 100, 300);
     p2.side = -1;
     
+
+    p2.gui.buttons.forEach((button) =>
+    {
+        button.text.icon.alpha = 0;
+        button.text.name.alpha = 0;
+        button.text.cost.alpha = 0;
+    });
+
+    p2.gui.home.forEach((button) =>
+    {
+        button.text.icon.alpha = 0;
+        button.text.name.alpha = 0;
+        button.text.cost.alpha = 0;
+    });
+
+    p2.gui.creatures.forEach((button) =>
+    {
+        button.text.icon.alpha = 0;
+        button.text.name.alpha = 0;
+        button.text.cost.alpha = 0;
+    });
+
+    p2.gui.sorcery.forEach((button) =>
+    {
+        button.text.icon.alpha = 0;
+        button.text.name.alpha = 0;
+        button.text.cost.alpha = 0;
+    });
+
+    p2.gui.enchantments.forEach((button) =>
+    {
+        button.text.icon.alpha = 0;
+        button.text.name.alpha = 0;
+        button.text.cost.alpha = 0;
+    });   
+
+
+
+
+
+
+
     players = Array();
     table.insert(players, p1);
     table.insert(players, p2);
@@ -86,7 +128,7 @@ function draw()
     sprite(vignette, (WIDTH)/2, HEIGHT/2, WIDTH, HEIGHT);
     
 
-  //  p1.gui.render();
+    p1.gui.render();
     p1.gui.stick.render();
     
 

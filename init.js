@@ -93,7 +93,7 @@ function inputHandler()
         touched(Touch)
     }
     else
-    if (game.input.mousePointer.isUp)
+    if (game.input.mousePointer.isUp && Touch.state != ENDED)
     {
         Touch.state = ENDED;
         Touch.x = game.input.mousePointer.x;
@@ -113,7 +113,7 @@ function inputHandler()
         touched(Touch)
     }
     else
-    if (game.input.pointer1.isUp)
+    if (game.input.pointer1.isUp && Touch.state != ENDED)
     {
         Touch.state = ENDED;
         Touch.x = game.input.pointer1.x;

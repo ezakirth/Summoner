@@ -109,13 +109,52 @@ GUI.prototype.render = function()
     {
         button.render();
     });
-    
+
+    this.home.forEach((button) =>
+    {
+        button.text.icon.alpha = 0;
+        button.text.name.alpha = 0;
+        button.text.cost.alpha = 0;
+    });
+
+    this.creatures.forEach((button) =>
+    {
+        button.text.icon.alpha = 0;
+        button.text.name.alpha = 0;
+        button.text.cost.alpha = 0;
+    });
+
+    this.sorcery.forEach((button) =>
+    {
+        button.text.icon.alpha = 0;
+        button.text.name.alpha = 0;
+        button.text.cost.alpha = 0;
+    });
+
+    this.enchantments.forEach((button) =>
+    {
+        button.text.icon.alpha = 0;
+        button.text.name.alpha = 0;
+        button.text.cost.alpha = 0;
+    });    
+
     this.currentFolder.forEach((button) =>
     {
-        if ( button.id != "next" && (button.id == "home" || button.page == this.currentPage) ) {
+        if ( button.id != "next" && (button.id == "home" || button.page == this.currentPage) )
+        {
+            button.text.icon.alpha = 1;
+            button.text.name.alpha = 1;
+            button.text.cost.alpha = 1;
+
             button.render();
         }
-        if ( button.id == "next" && this["pages_" + this.currentFolderName] > 1 ) {
+       
+        if ( button.id == "next" && this["pages_" + this.currentFolderName] > 1 )
+        {
+            button.text.icon.alpha = 1;
+            button.text.name.alpha = 1;
+            button.text.cost.alpha = 1;
+
             button.render();
         }
     });

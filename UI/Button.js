@@ -12,15 +12,14 @@ function Button(obj, owner, pos, page)
 	
     this.cost = this.setStat(this.cost);
 
+    this.text = {};
+    this.text.icon = game.add.text(0, 0, this.icon, { boundsAlignH: "center", boundsAlignV : "center" });
+    this.text.name = game.add.text(0, 0, this.name, { boundsAlignH: "center", boundsAlignV : "center" });
+    this.text.cost = game.add.text(0, 0, this.cost, { boundsAlignH: "center", boundsAlignV : "center" }); 
 
-	this.text = {};
-	this.text.icon = game.add.text(0, 0, this.icon);
-	this.text.name = game.add.text(0, 0, this.name);
-	this.text.cost = game.add.text(0, 0, this.cost);    
-    
     if ( pos )
     {
-        this.pos = new vec2(WIDTH - 64, 520 - 192 - pos * 70);
+        this.pos = new vec2(WIDTH - 64, HEIGHT - (520 - 192 - pos * 70));
     }
     this.page = page || 1;
     
@@ -45,16 +44,19 @@ Button.prototype.render = function()
 
     if ( this.type != "action" )
     {
-        this.text.icon.fontSize = 30;
-        this.text.icon.x = this.pos.x;
-        this.text.icon.y = this.pos.y - 5;
+		this.text.icon.fontSize = 25;
+        this.text.icon.setTextBounds(this.pos.x - this.w/2, this.pos.y - this.h/2 + 8, this.w, this.h);
+        this.text.name.fontSize = 12;
+        this.text.name.fill = rgbToHex(0, 0, 0, 255);
+        this.text.name.setTextBounds(this.pos.x - this.w/2, this.pos.y + 12, this.w, this.h);     
     }
     else
     {
-        this.text.icon.fontSize = 40;
-        this.text.icon.x = this.pos.x;
-        this.text.icon.y = this.pos.y;
-        
+		this.text.icon.fontSize = 40;
+        this.text.icon.setTextBounds(this.pos.x - this.w/2, this.pos.y - this.h/2 + 6, this.w, this.h);
+        this.text.name.fontSize = 12;
+        this.text.name.fill = rgbToHex(0, 0, 0, 255);
+        this.text.name.setTextBounds(this.pos.x - this.w/2, this.pos.y + 18, this.w, this.h);        
     }
 
 
@@ -62,16 +64,14 @@ Button.prototype.render = function()
     {
         if ( this.id != "home" && this.id != "next" )
         {
-            this.text.name.fontSize = 15;
+            this.text.name.fontSize = 12;
             this.text.name.fill = rgbToHex(0, 0, 0, 255);
-            this.text.name.x = this.pos.x;
-            this.text.name.y = this.pos.y;            
+            this.text.name.setTextBounds(this.pos.x - this.w/2, this.pos.y + 8, this.w, this.h);
         }
 
         this.text.cost.fontSize = 15;
         this.text.cost.fill = rgbToHex(0, 0, 0, 255);
-        this.text.cost.x = this.pos.x;
-        this.text.cost.y = this.pos.y;
+        this.text.cost.setTextBounds(this.pos.x - this.w/2, this.pos.y + 18, this.w, this.h);
     }
 }
 
@@ -113,7 +113,7 @@ Button.prototype.touched = function(touch)
                 }
                 else
                 {
-                    this.owner.doAction(_G[this.type][this.color][this.id]);
+                    this.owner.doAction(window[this.type][this.color][this.id]);
                 }
             }
         }

@@ -1,7 +1,8 @@
-function Hero(ent)
+function Hero(ent, showGui)
 {
     this.deck = ent.deck;
     this.gui = new GUI(this, this.deck);
+    this.showGui = showGui;
     this.name = ent.name;
     this.id = ent.id;
     this.life = ent.life;
