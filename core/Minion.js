@@ -1,7 +1,5 @@
 function Minion(ent, owner)
 {
-    this.model = new Entity(graphics.creatures[ent.color], this);
-    
     this.life = ent.life;
     this.power = ent.power;
     this.speed = ent.speed;
@@ -46,6 +44,13 @@ function Minion(ent, owner)
     }
     
     
+	this.text = {};
+	this.text.buffs = game.add.text(0, 0, this.buffs, { boundsAlignH: "center", boundsAlignV : "center", wordWrap: true, align : "center" });
+	this.text.name = game.add.text(0, 0, this.name, { boundsAlignH: "center", boundsAlignV : "center" });
+	this.text.action = game.add.text(0, 0, this.status, { boundsAlignH: "center", boundsAlignV : "center" });
+	this.text.powerText = game.add.text(0, 0, this.powerText, { boundsAlignH: "center", boundsAlignV : "center" });
+	this.text.lifeText = game.add.text(0, 0, this.lifeText, { boundsAlignH: "center", boundsAlignV : "center" });
+	
     this.respawn();
 }
 
@@ -189,8 +194,6 @@ Minion.prototype.checkEnemy = function()
 
 Minion.prototype.animate = function()
 {
-    this.model.timer = this.model.timer + DeltaTime;
-    
     if ( this.activeTimer() == "spawn" || this.activeTimer() == "unsummon" )
     {
         this.status = "idle";
@@ -246,8 +249,7 @@ Minion.prototype.animate = function()
                             }
                         });
                     }
-                    
-                    crystals.addShards(vec3(this.pos.x, this.pos.y, this.cost/2));
+                    crystals.addShards(new vec2(this.pos.x, this.pos.y, this.cost/2));
                     this.dead = true;
                 }
             }
@@ -338,69 +340,92 @@ Minion.prototype.render = function()
     
     
     var action = this.activeTimer() || tmp_action;
+
+    var flying = 0;
     
-    
-    pushMatrix();
-    translate(this.spawn.x,this.spawn.y-20);
-    scale(2 + Math.sin(ElapsedTime*5)/10,2);
-    sprite("Dropbox.Spawn", 0, 0, 64, 32);
-    popMatrix();
-    
+    if ( this.flying )
+    {
+        flying = 60;
+    }
+
+    Graphics.lineStyle(10, rgbToHex(128, 128, 255, 255, true) );
+    Graphics.beginFill(rgbToHex(128, 128, 255, 255, true), 0);
+    Graphics.drawEllipse(this.spawn.x, this.spawn.y + 30, 32 + 32 * Math.sin(ElapsedTime*5)/10, 8);
+    Graphics.endFill();
+
+
     if ( this.isVisible() )
     {
-        pushMatrix();
-        translate(this.pos.x,this.pos.y);
-        
-        fill(255, 181, 0, 255);
+
+        if ( action == "moving" )
+        {
+            Graphics.lineStyle(0);
+            Graphics.beginFill(rgbToHex(32, 32, 32, 255, true), 1);
+            Graphics.drawEllipse(this.pos.x, this.pos.y + 30, 48 + 32 * Math.sin(ElapsedTime*5)/10 - flying/2, 16 - flying/10);
+            Graphics.endFill();
+        }
+        else
+        {
+            Graphics.lineStyle(0);
+            Graphics.beginFill(rgbToHex(32, 32, 32, 255, true), 1);
+            Graphics.drawEllipse(this.pos.x, this.pos.y + 30, 48 + 32 * Math.sin(ElapsedTime*2)/10 - flying/2, 16 - flying/10);
+            Graphics.endFill();
+        }
         
         if ( this.controller.side == 1 )
         {
-            stroke(0, 0, 255, 255);
+			stroke(0, 0, 255, 255);
         }
         else
         {
-            stroke(255, 0, 0, 255);
+			stroke(255, 0, 0, 255);
         }
+
+		Graphics.beginFill(rgbToHex(255, 181, 0, 255, true));
+		Graphics.drawRect(this.pos.x - 30, this.pos.y - 30 - flying, 60, 60);
+		Graphics.endFill();
         
-        var flying = 0;
-        
-        if ( this.flying ) {
-            flying = 40;
-        }
-        
-        if ( action == "moving" )
-        {
-            sprite("Dropbox.Shadow", 0, -30, 128+Math.sin(ElapsedTime*6)*10 - flying, 64 - flying);
-        }
-        else
-        {
-            sprite("Dropbox.Shadow", 0, -30, 128+Math.sin(ElapsedTime*2)*10 - flying, 64 - flying);
-        }
-        
-        if ( cartoon )
-        {
-            this.model.draw();
-        }
-        else
-        {
-            rect(-30, -30 + flying, 60, 60);
-        }
-        
-        fill(255, 255, 255, 255);
-        text(this.name, 0, 40 + flying);
-        text(this.buffs, 0, 10 + flying);
-        text(action, 0, -10 + flying);
-        popMatrix();
-        
-        fill(255, 0, 0, 255);
-        text(this.powerText, this.pos.x, this.pos.y - 42);
-        fill(0, 255, 0, 255);
-        text(this.lifeText, this.pos.x, this.pos.y - 64);
-        
+		this.text.name.fontSize = 12;
+		this.text.name.fill = rgbToHex(255, 255, 255, 255);
+        this.text.name.setTextBounds(this.pos.x - 30, this.pos.y - 50 - flying, 60, 60)
+		
+		this.text.buffs.fontSize = 15;
+		this.text.buffs.fill = rgbToHex(255, 255, 255, 255);
+		this.text.buffs.text = this.buffs;
+        this.text.buffs.setTextBounds(this.pos.x - 30, this.pos.y - 8 - flying, 60, 60)
+
+		this.text.action.fontSize = 10;
+		this.text.action.fill = rgbToHex(255, 255, 255, 255);
+		this.text.action.text = action;
+        this.text.action.setTextBounds(this.pos.x - 30, this.pos.y + 15 - flying, 60, 60)
+
+
+		this.text.powerText.fontSize = 17;
+		this.text.powerText.fill = rgbToHex(255, 0, 0, 255);
+		this.text.powerText.text = this.powerText;
+        this.text.powerText.setTextBounds(this.pos.x - 30, this.pos.y + 34 + 17 - flying, 60, 60)
+
+		this.text.lifeText.fontSize = 17;
+		this.text.lifeText.fill = rgbToHex(0, 255, 0, 255);
+		this.text.lifeText.text = this.powerText;			
+        this.text.lifeText.setTextBounds(this.pos.x - 30, this.pos.y + 32 - flying, 60, 60)
+
+
+        this.text.name.alpha = 1;
+        this.text.buffs.alpha = 1;
+        this.text.action.alpha = 1;
+        this.text.powerText.alpha = 1;
+        this.text.lifeText.alpha = 1;
     }
-    
-    
-    
+    else
+    {
+        this.text.name.alpha = 0;
+        this.text.buffs.alpha = 0;
+        this.text.action.alpha = 0;
+        this.text.powerText.alpha = 0;
+        this.text.lifeText.alpha = 0;
+    }
+
 }
 
 

@@ -20,21 +20,20 @@ Stick.prototype.render = function()
         {
             this.owner.status = "moving";
             
-            var vec = (this.pos - this.origin);
+            var vec = new vec2(this.pos.x - this.origin.x, this.pos.y - this.origin.y);
             var dir = new vec2(0,0);
-            if ( vec != dir )
+            if ( vec.x != dir.x && vec.y != dir.y )
             {
                 dir = vec.normalize();
             }
-            
-            if ( multi )
-            {
-                dir = dir.rotate(Math.rad(90)*this.owner.side);
-                dir.x = dir.x * this.owner.side;
-            }
-            
-            this.owner.pos = this.owner.pos + dir * this.owner.speed * this.dist/50;
-            
+
+            this.owner.pos.x += dir.x * this.owner.speed * this.dist/50;
+            this.owner.pos.y += dir.y * this.owner.speed * this.dist/50;
+
+
+
+
+           /* 
             if ( this.owner.pos.y > 410 )
             {
                 this.owner.pos.y = 410;
@@ -54,11 +53,20 @@ Stick.prototype.render = function()
             if ( this.owner.pos.x > 1170 - offset_right )
             {
                 this.owner.pos.x = 1170 - offset_right;
-            }
+            }*/
             
         }
-        sprite("Dropbox.stick", this.pos.x, this.pos.y);
-        sprite("Dropbox.stick_bg", this.origin.x, this.origin.y);
+
+        Graphics.lineStyle(30, rgbToHex(96, 96, 96, 255, true), .5 );
+        Graphics.beginFill(rgbToHex(255, 255, 255, 255, true), 0);
+        Graphics.drawCircle(this.origin.x, this.origin.y, 128);
+        Graphics.endFill();
+
+        Graphics.lineStyle(0);
+        Graphics.beginFill(rgbToHex(128, 128, 128, 255, true), .5);
+        Graphics.drawCircle(this.pos.x, this.pos.y, 96);
+        Graphics.endFill();
+
     }
 }
     

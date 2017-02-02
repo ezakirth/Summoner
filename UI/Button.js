@@ -9,8 +9,14 @@ function Button(obj, owner, pos, page)
     this.icon = obj.icon;
     this.cost = obj.cost || 0;
     this.id = obj.id;
-    
+	
     this.cost = this.setStat(this.cost);
+
+
+	this.text = {};
+	this.text.icon = game.add.text(0, 0, this.icon);
+	this.text.name = game.add.text(0, 0, this.name);
+	this.text.cost = game.add.text(0, 0, this.cost);    
     
     if ( pos )
     {
@@ -31,79 +37,52 @@ function Button(obj, owner, pos, page)
 
 Button.prototype.render = function()
 {
-    pushMatrix();
-    translate(this.pos.x - this.w/2, this.pos.y - this.h/2);
-    fill(255, 255, 255, 128);
     stroke(186, 186, 186, 255);
-    rect(0, 0, this.w, this.h);
-    
-    popMatrix();
-    
-    pushMatrix();
-    fill(255, 255, 255, 255);
-    translate(this.pos.x, this.pos.y);
+
+	Graphics.beginFill(rgbToHex(255, 255, 255, 255, true));
+	Graphics.drawRect(this.pos.x - this.w/2, this.pos.y - this.h/2, this.w, this.h);
+	Graphics.endFill();		
+
     if ( this.type != "action" )
     {
-        fontSize(30);
-        text(this.icon, 0, -5);
+        this.text.icon.fontSize = 30;
+        this.text.icon.x = this.pos.x;
+        this.text.icon.y = this.pos.y - 5;
     }
     else
     {
-        fontSize(40);
-        text(this.icon, 0, 0);
+        this.text.icon.fontSize = 40;
+        this.text.icon.x = this.pos.x;
+        this.text.icon.y = this.pos.y;
+        
     }
-    
-    popMatrix();
-    
-    pushMatrix();
-    translate(this.pos.x, this.pos.y);
-    fontSize(15);
-    fill(0, 0, 0, 255);
+
+
     if ( this.type != "action" )
     {
         if ( this.id != "home" && this.id != "next" )
         {
-            text(this.name, 0, 20);
+            this.text.name.fontSize = 15;
+            this.text.name.fill = rgbToHex(0, 0, 0, 255);
+            this.text.name.x = this.pos.x;
+            this.text.name.y = this.pos.y;            
         }
-        text(this.cost, 0, -25);
+
+        this.text.cost.fontSize = 15;
+        this.text.cost.fill = rgbToHex(0, 0, 0, 255);
+        this.text.cost.x = this.pos.x;
+        this.text.cost.y = this.pos.y;
     }
-    
-    popMatrix();
-    
 }
 
 Button.prototype.touched = function(touch)
 {
     var xr, xl, yt, yb, newpos = null;
-    if ( multi )
-    {
-        if ( this.owner.side == 1 )
-        {
-            newpos = this.pos.rotate(Math.rad(-90));
-            newpos.y = newpos.y + WIDTH;
-            xr = newpos.x + this.h/2;
-            xl = newpos.x - this.h/2;
-            yt = newpos.y + this.w/2;
-            yb = newpos.y - this.w/2;
-        }
-        else
-        {
-            newpos = this.pos.rotate(Math.rad(90));
-            newpos.x = newpos.x + WIDTH;
-            newpos.y = newpos.y - (WIDTH-HEIGHT)            ;
-            xr = newpos.x + this.h/2;
-            xl = newpos.x - this.h/2;
-            yt = newpos.y + this.w/2;
-            yb = newpos.y - this.w/2;
-        }
-    }
-    else
-    {
-        xr = this.pos.x + this.w/2;
-        xl = this.pos.x - this.w/2;
-        yt = this.pos.y + this.h/2;
-        yb = this.pos.y - this.h/2;
-    }
+
+    xr = this.pos.x + this.w/2;
+    xl = this.pos.x - this.w/2;
+    yt = this.pos.y + this.h/2;
+    yb = this.pos.y - this.h/2;
     
     var touching = touch.x < xr && touch.x > xl && touch.y < yt && touch.y > yb;
     if ( touching )

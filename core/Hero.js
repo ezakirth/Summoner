@@ -1,7 +1,6 @@
 function Hero(ent)
 {
     this.deck = ent.deck;
-    this.model = new Entity(graphics.creatures[ent.color], this);
     this.gui = new GUI(this, this.deck);
     this.name = ent.name;
     this.id = ent.id;
@@ -28,6 +27,17 @@ function Hero(ent)
     this.timers = Array();
     
     this.attackTimer = new Timer(.5, "attack");
+	
+
+	    
+	this.text = {};
+	this.text.name = game.add.text(0, 0, this.name, { boundsAlignH: "center", boundsAlignV : "center" });
+	this.text.dialog = game.add.text(0, 0, "", { boundsAlignH: "center", boundsAlignV : "center" });
+	this.text.action = game.add.text(0, 0, this.status, { boundsAlignH: "center", boundsAlignV : "center" });
+	this.text.manaText = game.add.text(0, 0, this.manaText, { boundsAlignH: "center", boundsAlignV : "center" });
+	this.text.lifeText = game.add.text(0, 0, this.life + " " + this.lifeText, { boundsAlignH: "center", boundsAlignV : "center" });
+	
+	
 }
 
 Hero.prototype.updateStats = function()
@@ -39,7 +49,7 @@ Hero.prototype.updateStats = function()
 
 Hero.prototype.attack = function()
 {
-    if ( ! this.activeTimer() )
+    if ( this.activeTimer() === false)
     {
         this.status = "attack";
         table.insert(this.timers, this.attackTimer);
@@ -210,10 +220,6 @@ Hero.prototype.stopcasting = function()
 
 Hero.prototype.animate = function()
 {
-    this.model.timer = this.model.timer + DeltaTime;
-    
-    
-    
     if ( this.auras[0] == null )
     {
         table.remove(this.auras, 0);
@@ -314,6 +320,13 @@ Hero.prototype.animate = function()
         if ( minion.dead )
         {
             dead_minion = index;
+
+            minion.text.name.destroy();
+            minion.text.buffs.destroy();
+            minion.text.action.destroy();
+            minion.text.powerText.destroy();
+            minion.text.lifeText.destroy();
+
         }
     });
     
@@ -328,15 +341,23 @@ Hero.prototype.render = function()
     
     var action = this.activeTimer() || this.status;
     
-    fontSize(17);
     
-    pushMatrix();
-    translate(this.pos.x,this.pos.y);
+
     
-    scale(this.side *2, 2);
-    
-    
-    fill(255, 255, 255, 255);
+    if ( this.status == "moving" )
+    {
+        Graphics.lineStyle(0);
+        Graphics.beginFill(rgbToHex(32, 32, 32, 255, true), 1);
+        Graphics.drawEllipse(this.pos.x, this.pos.y + 60, 64 + 64 * Math.sin(ElapsedTime*5)/10, 20);
+        Graphics.endFill();
+    }
+    else
+    {
+        Graphics.lineStyle(0);
+        Graphics.beginFill(rgbToHex(32, 32, 32, 255, true), 1);
+        Graphics.drawEllipse(this.pos.x, this.pos.y + 60, 64 + 64 * Math.sin(ElapsedTime*2)/10, 20);
+        Graphics.endFill();
+    }
     
     if ( this.side == 1 )
     {
@@ -346,31 +367,21 @@ Hero.prototype.render = function()
     {
         stroke(255, 0, 0, 255);
     }
-    
-    if ( this.status == "moving" )
-    {
-        sprite("Dropbox.Shadow", 0, -15, 64+Math.sin(ElapsedTime*6)*5, 32);
-    }
-    else
-    {
-        sprite("Dropbox.Shadow", 0, -15, 64+Math.sin(ElapsedTime*2)*5, 32);
-    }
-    
-    if ( cartoon )
-    {
-        this.model.draw();
-    }
-    else
-    {
-        rect(-20, -15, 40, 60);
-    }
+
+	Graphics.beginFill(rgbToHex(255, 255, 255, 255, true));
+	Graphics.drawRect(this.pos.x - 40, this.pos.y - 60, 80, 120);
+	Graphics.endFill();	
+	
     
     if ( this.shielding )
     {
-        sprite("Dropbox.Shield (1)", 0, 15, 100, 120);
+        Graphics.lineStyle(0);
+		Graphics.beginFill(rgbToHex(0, 0, 255, 255, true), .5);
+		Graphics.drawRect(this.pos.x - 50, this.pos.y - 70 , 100, 140);
+		Graphics.endFill();	
     }
     
-    if ( action == "attack" || this.castSpell )
+    if ( action == "attack" || this.castSpell)
     {
         var name = "";
         if ( action == "attack" )
@@ -384,24 +395,45 @@ Hero.prototype.render = function()
                 name = this.castSpell.name + " !";
             }
         }
-        sprite("Dropbox.chat", 40, 50, 10 + 5*string.len(name), 40);
-        scale(this.side *.5, .5);
-        fill(0, 0, 0, 255);
-        text(name, 80 * this.side, 107);
+
+        Graphics.lineStyle(3, rgbToHex(0, 0, 0, 255, true));
+		Graphics.beginFill(rgbToHex(255, 255, 255, 255, true), 1);
+        Graphics.drawRect(this.pos.x - (10 + 10*name.length)/2 + 100*this.side, this.pos.y - 96 , 10 + 10*name.length, 60);
+		Graphics.endFill();	
+
+		this.text.dialog.fontSize = 17;
+		this.text.dialog.fill = rgbToHex(0, 0, 0, 255);
+		this.text.dialog.text = name;
+        this.text.dialog.setTextBounds(this.pos.x - (10 + 10*name.length)/2 + 100*this.side, this.pos.y - 74, 10 + 10*name.length, 60);
+        this.text.dialog.alpha = 1;
     }
-    popMatrix();
+    else
+    {
+        this.text.dialog.alpha = 0;
+    }
+
     
-    fill(0, 255, 0, 255);
-    text(this.life + " " + this.lifeText, this.pos.x, this.pos.y - 42);
-    fill(255, 255, 255, 255);
-    fontSize(10);
-    text(this.manaText, this.pos.x, this.pos.y - 64);
-    fontSize(17);
+	this.text.lifeText.fontSize = 17;
+	this.text.lifeText.fill = rgbToHex(0, 255, 0, 255);
+	this.text.lifeText.text = this.life + " " + this.lifeText;
+    this.text.lifeText.setTextBounds(this.pos.x - 40, this.pos.y + 70, 80, 140)
+	
+	
+	this.text.manaText.fontSize = 5;
+	this.text.manaText.fill = rgbToHex(255, 255, 255, 255);
+	this.text.manaText.text = this.manaText;		
+    this.text.manaText.setTextBounds(this.pos.x - 40, this.pos.y + 50, 80, 140)
+
+	this.text.name.fontSize = 17;
+	this.text.name.fill = rgbToHex(0, 0, 0, 255);
+    this.text.name.setTextBounds(this.pos.x - 40, this.pos.y - 50, 80, 140)
+
     
-    fill(0, 0, 0, 255);
-    text(this.name, this.pos.x, this.pos.y + 60);
-    text(action, this.pos.x, this.pos.y);
-    
+	this.text.action.fontSize = 15;
+	this.text.action.fill = rgbToHex(0, 0, 0, 255);
+	this.text.action.text = action;
+    this.text.action.setTextBounds(this.pos.x - 40, this.pos.y, 80, 140)
+	
 }
 
 

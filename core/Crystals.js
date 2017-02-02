@@ -47,7 +47,7 @@ Crystals.prototype.forceSpawnCrystal = function(player)
 
 Crystals.prototype.addShards = function(shard)
 {
-    table.insert(this.shards, Array(new vec2(shard.x, shard.y), shard.z));
+    table.insert(this.shards, Array(new vec2(shard.x, shard.y), shard.val));
 }
 
 Crystals.prototype.draw = function()
@@ -91,9 +91,17 @@ Crystals.prototype.draw = function()
                 var dist = owner.crystalPos.dist(player.pos);
                 if ( dist < 64 )
                 {
-                    player.crystals = player.crystals + 1;
+                    if (player.crystals < 10)
+                    {
+                        player.crystals = player.crystals + 1;
+                    }
                     player.mana = player.mana + 1;
                     
+                    if (player.mana > player.crystals)
+                    {
+                        player.mana = player.crystals;
+                    }
+
                     owner.crystalReady = false;
                     owner.crystalDelay = owner.crystalDelay + 3;
                     table.insert(owner.crystalTimer, new Timer(owner.crystalDelay, "crystal"));
@@ -128,10 +136,10 @@ Crystals.prototype.draw = function()
     {
         if ( shard )
         {
-            text(shard[1] + "💎", shard[1].x, shard[0].y);
+            text(shard[1] + "💎", shard[0].x, shard[0].y);
             players.some((player) =>
             {
-                var dist = shard[1].dist(player.pos);
+                var dist = shard[0].dist(player.pos);
                 if ( dist < 64 )
                 {
                     player.mana = player.mana + shard[1];
