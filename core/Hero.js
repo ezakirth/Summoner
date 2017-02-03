@@ -1,5 +1,7 @@
 function Hero(ent, showGui)
 {
+    this.sprites = {};
+
     this.deck = ent.deck;
     this.gui = new GUI(this, this.deck);
     this.showGui = showGui;
@@ -27,7 +29,7 @@ function Hero(ent, showGui)
     this.castSpell = null;
     this.timers = Array();
     
-    this.attackTimer = new Timer(.5, "attack");
+    this.attackTimer = new Timer(500, "attack");
 	
 
 	    
@@ -197,7 +199,7 @@ Hero.prototype.resolveSpell = function(spell)
                 }
                 if ( ability == "freeze" )
                 {
-                    table.insert(target.timers, new Timer(5, "frozen"));
+                    table.insert(target.timers, new Timer(500, "frozen"));
                 }
                 if ( ability == "leech" )
                 {
@@ -322,12 +324,15 @@ Hero.prototype.animate = function()
         {
             dead_minion = index;
 
-            minion.text.name.destroy();
-            minion.text.buffs.destroy();
-            minion.text.action.destroy();
-            minion.text.powerText.destroy();
-            minion.text.lifeText.destroy();
+            for(obj in minion.text)
+            {
+                minion.text[obj].destroy();
+            }
 
+            for(obj in minion.sprites)
+            {
+                minion.sprites[sprite].destroy();
+            }
         }
     });
     
@@ -343,21 +348,15 @@ Hero.prototype.render = function()
     var action = this.activeTimer() || this.status;
     
     
-
+    this.sprites.shadow.position.setTo(this.pos.x, this.pos.y);
     
     if ( this.status == "moving" )
     {
-        Graphics.lineStyle(0);
-        Graphics.beginFill(rgbToHex(32, 32, 32, 255, true), 1);
-        Graphics.drawEllipse(this.pos.x, this.pos.y + 60, 64 + 64 * Math.sin(ElapsedTime*5)/10, 20);
-        Graphics.endFill();
+        this.sprites.shadow.width = 96 + 64 * Math.sin(ElapsedTime*8)/10;
     }
     else
     {
-        Graphics.lineStyle(0);
-        Graphics.beginFill(rgbToHex(32, 32, 32, 255, true), 1);
-        Graphics.drawEllipse(this.pos.x, this.pos.y + 60, 64 + 64 * Math.sin(ElapsedTime*2)/10, 20);
-        Graphics.endFill();
+        this.sprites.shadow.width = 96 + 64 * Math.sin(ElapsedTime*2)/10;
     }
     
     if ( this.side == 1 )
@@ -368,11 +367,6 @@ Hero.prototype.render = function()
     {
         stroke(255, 0, 0, 255);
     }
-
-	Graphics.beginFill(rgbToHex(255, 255, 255, 255, true));
-	Graphics.drawRect(this.pos.x - 40, this.pos.y - 60, 80, 120);
-	Graphics.endFill();	
-	
     
     if ( this.shielding )
     {
@@ -402,10 +396,7 @@ Hero.prototype.render = function()
         Graphics.drawRect(this.pos.x - (10 + 10*name.length)/2 + 100*this.side, this.pos.y - 96 , 10 + 10*name.length, 60);
 		Graphics.endFill();	
 
-		this.text.dialog.fontSize = 17;
-		this.text.dialog.fill = rgbToHex(0, 0, 0, 255);
-		this.text.dialog.text = name;
-        this.text.dialog.setTextBounds(this.pos.x - (10 + 10*name.length)/2 + 100*this.side, this.pos.y - 74, 10 + 10*name.length, 60);
+        drawText(this.text.dialog, 17, rgbToHex(0, 0, 0, 255), name, this.pos.x - (10 + 10*name.length)/2 + 100*this.side, this.pos.y - 74, 10 + 10*name.length, 60);
         this.text.dialog.alpha = 1;
     }
     else
@@ -413,28 +404,10 @@ Hero.prototype.render = function()
         this.text.dialog.alpha = 0;
     }
 
-    
-	this.text.lifeText.fontSize = 17;
-	this.text.lifeText.fill = rgbToHex(0, 255, 0, 255);
-	this.text.lifeText.text = this.life + " " + this.lifeText;
-    this.text.lifeText.setTextBounds(this.pos.x - 40, this.pos.y + 70, 80, 140)
-	
-	
-	this.text.manaText.fontSize = 5;
-	this.text.manaText.fill = rgbToHex(255, 255, 255, 255);
-	this.text.manaText.text = this.manaText;		
-    this.text.manaText.setTextBounds(this.pos.x - 40, this.pos.y + 50, 80, 140)
-
-	this.text.name.fontSize = 17;
-	this.text.name.fill = rgbToHex(0, 0, 0, 255);
-    this.text.name.setTextBounds(this.pos.x - 40, this.pos.y - 50, 80, 140)
-
-    
-	this.text.action.fontSize = 15;
-	this.text.action.fill = rgbToHex(0, 0, 0, 255);
-	this.text.action.text = action;
-    this.text.action.setTextBounds(this.pos.x - 40, this.pos.y, 80, 140)
-	
+    drawText(this.text.name, 17, rgbToHex(255, 255, 255, 255), this.name, this.pos.x - 80,                       this.pos.y - 140, 160, 160);
+    drawText(this.text.action, 10, rgbToHex(255, 255, 255, 255), action, this.pos.x - 80,                        this.pos.y, 160, 160);
+    drawText(this.text.lifeText, 17, rgbToHex(0, 255, 0, 255), this.life + " " + this.lifeText, this.pos.x - 80, this.pos.y + 12, 160, 160);
+    drawText(this.text.manaText, 8, rgbToHex(0, 255, 255, 255), this.manaText, this.pos.x - 80,                  this.pos.y + 37, 160, 160);
 }
 
 

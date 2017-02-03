@@ -8,7 +8,7 @@ sorcery.blue = {
             life : 0,
             power : 0,
             cost : 1,
-            castTime : 1,
+            castTime : 1000,
             abilities : Array( "unsummon" ),
             // button;
             icon : "💨",
@@ -23,7 +23,7 @@ sorcery.blue = {
             life : 0,
             power : 0,
             cost : 3,
-            castTime : 1,
+            castTime : 1000,
             abilities : Array( "freeze" ),
             // button;
             icon : "❄️",
@@ -38,7 +38,7 @@ sorcery.blue = {
             life : 0,
             power : 0,
             cost : 1,
-            castTime : 1,
+            castTime : 1000,
             abilities : Array( "spellproof" ),
             // button;
             icon : "💨",
@@ -53,7 +53,7 @@ sorcery.blue = {
             life : 0,
             power : 0,
             cost : 2,
-            castTime : 1,
+            castTime : 1000,
             abilities : Array( "counterspell" ),
             // button;
             icon : "💨",
@@ -68,7 +68,7 @@ sorcery.blue = {
             life : 0,
             power : 0,
             cost : 4,
-            castTime : 2,
+            castTime : 2000,
             abilities : Array( "spelljack" ),
             // button;
             icon : "💨",
@@ -83,7 +83,7 @@ sorcery.blue = {
             life : 0,
             power : 0,
             cost : 5,
-            castTime : 2,
+            castTime : 2000,
             abilities : Array( "manashort" ),
             // button;
             icon : "💨",
@@ -98,7 +98,7 @@ sorcery.blue = {
             life : 0,
             power : 0,
             cost : 5,
-            castTime : 2,
+            castTime : 2000,
             abilities : Array( "clone" ),
             // button;
             icon : "💨",

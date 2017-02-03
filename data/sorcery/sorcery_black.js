@@ -8,7 +8,7 @@ sorcery.black = {
             life : -2,
             power : 0,
             cost : 4,
-            castTime : 1,
+            castTime : 1000,
             abilities : Array( "leech" ),
             // button;
             icon : "🍀",
@@ -23,7 +23,7 @@ sorcery.black = {
             life : -2,
             power : -2,
             cost : 4,
-            castTime : 2,
+            castTime : 2000,
             abilities : Array(),
             // button;
             icon : "🍃",
@@ -38,7 +38,7 @@ sorcery.black = {
             life : 0,
             power : 0,
             cost : 5,
-            castTime : 2,
+            castTime : 2000,
             abilities : Array( "destroy" ),
             // button;
             icon : "🍃",
@@ -53,7 +53,7 @@ sorcery.black = {
             life : 0,
             power : 0,
             cost : 6,
-            castTime : 2,
+            castTime : 2000,
             abilities : Array( "destroy", "feedback" ),
             // button;
             icon : "🍃",
@@ -68,7 +68,7 @@ sorcery.black = {
             life : -4,
             power : 0,
             cost : 7,
-            castTime : 2,
+            castTime : 2000,
             abilities : Array( "leech" ),
             // button;
             icon : "🍃",

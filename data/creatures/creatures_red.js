@@ -9,7 +9,7 @@ creatures.red = {
             power : 1,
             speed : 1,
             cost : 1,
-            castTime : 1,
+            castTime : 1000,
             abilities : Array( "haste" ),
             // button;
             icon : "👹",
@@ -25,7 +25,7 @@ creatures.red = {
             power : 2,
             speed : 1,
             cost : 2,
-            castTime : 2,
+            castTime : 2000,
             abilities : Array(),
             // button;
             icon : "🐸",
@@ -41,7 +41,7 @@ creatures.red = {
             power : 1,
             speed : 1,
             cost : 3,
-            castTime : 2,
+            castTime : 2000,
             abilities : Array( "aura goblins 1 1" ),
             // button;
             icon : "🐸",
@@ -57,7 +57,7 @@ creatures.red = {
             power : 2,
             speed : 1,
             cost : 3,
-            castTime : 2,
+            castTime : 2000,
             abilities : Array( "flying" ),
             // button;
             icon : "🐸",
@@ -73,7 +73,7 @@ creatures.red = {
             power : 3,
             speed : 1,
             cost : 4,
-            castTime : 2,
+            castTime : 2000,
             abilities : Array( "spellburn" ),
             // button;
             icon : "🐸",
@@ -89,7 +89,7 @@ creatures.red = {
             power : 5,
             speed : 1,
             cost : 5,
-            castTime : 3,
+            castTime : 3000,
             abilities : Array( "battlecry3" ),
             // button;
             icon : "🐸",
@@ -105,7 +105,7 @@ creatures.red = {
             power : 4,
             speed : 1,
             cost : 5,
-            castTime : 3,
+            castTime : 3000,
             abilities : Array( "flying", "haste" ),
             // button;
             icon : "🐲",

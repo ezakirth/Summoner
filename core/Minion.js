@@ -1,5 +1,7 @@
 function Minion(ent, owner)
 {
+    this.sprites = {};
+
     this.life = ent.life;
     this.power = ent.power;
     this.speed = ent.speed;
@@ -18,10 +20,17 @@ function Minion(ent, owner)
     this.checkAbilities();
     this.updateStats();
     
-    this.pos = new vec2();
+    this.offset = 0;
+
+    if (this.flying)
+    {
+        this.offset = 80;
+    }
+
     this.owner = owner;
     this.controller = owner;
-    this.spawn = new vec2(owner.pos.x + 64*owner.side, owner.pos.y);
+    this.spawnPos = new vec2(owner.pos.x + 64*owner.side, owner.pos.y);
+    this.pos = new vec2(this.spawnPos.x, this.spawnPos.y);
     
     this.inDuel = false;
     this.dying = false;
@@ -31,10 +40,10 @@ function Minion(ent, owner)
     
     
     this.timers = Array();
-    this.attackTimer = new Timer(1, "attack");
-    this.deathTimer = new Timer(.5, "death");
-    this.spawnTimer = new Timer(.5, "spawn");
-    this.unsummonTimer = new Timer(.5, "unsummon");
+    this.attackTimer = new Timer(500, "attack");
+    this.deathTimer = new Timer(500, "death");
+    this.spawnTimer = new Timer(1000, "spawn");
+    this.unsummonTimer = new Timer(1000, "unsummon");
     
     this.new = true;
     
@@ -43,14 +52,63 @@ function Minion(ent, owner)
         table.insert(this.owner.auras, "goblinbuff");
     }
     
-    
+	
+
+
 	this.text = {};
-	this.text.buffs = game.add.text(0, 0, this.buffs, { boundsAlignH: "center", boundsAlignV : "center", wordWrap: true, align : "center" });
 	this.text.name = game.add.text(0, 0, this.name, { boundsAlignH: "center", boundsAlignV : "center" });
 	this.text.action = game.add.text(0, 0, this.status, { boundsAlignH: "center", boundsAlignV : "center" });
 	this.text.powerText = game.add.text(0, 0, this.powerText, { boundsAlignH: "center", boundsAlignV : "center" });
 	this.text.lifeText = game.add.text(0, 0, this.lifeText, { boundsAlignH: "center", boundsAlignV : "center" });
-	
+
+
+    drawText(this.text.name, 12, rgbToHex(255, 255, 255, 255), this.name + " " + this.buffs, this.pos.x - 80,   this.pos.y - 100 - this.offset, 160, 160);
+    drawText(this.text.action, 10, rgbToHex(255, 255, 255, 255), "", this.pos.x - 80,                           this.pos.y + 10 - this.offset, 160, 160);
+    drawText(this.text.lifeText, 17, rgbToHex(0, 255, 0, 255), this.lifeText, this.pos.x - 80,                  this.pos.y + 20 - this.offset, 160, 160);
+    drawText(this.text.powerText, 17, rgbToHex(255, 0, 0, 255), this.powerText, this.pos.x - 80,                this.pos.y + 39 - this.offset, 160, 160);
+
+
+    if (this.flying)
+    {
+        this.sprites.model = game.add.image(this.pos.x, this.pos.y, 'bat');
+        this.sprites.model.animations.add('idle',   [0]);
+        this.sprites.model.animations.add('moving', [0, 1, 2, 3]);
+        this.sprites.model.animations.add('dead',   [8, 9, 10, 11, 12, 13]);
+        this.sprites.model.animations.add('hurt',   [16, 17]);
+        this.sprites.model.animations.add('attack', [24, 25, 26, 27, 28, 29, 30, 31]);
+        this.sprites.model.anchor.setTo(.5, 1.25); 
+    }
+    else
+    {
+        this.sprites.model = game.add.image(this.pos.x, this.pos.y, 'goblin');
+        this.sprites.model.animations.add('idle',   [0]);
+        this.sprites.model.animations.add('moving', [0, 1, 2, 3, 4, 5, 6, 7]);
+        this.sprites.model.animations.add('dead',   [8, 9, 10, 11, 12, 13, 14]);
+        this.sprites.model.animations.add('attack', [16, 17, 18, 19, 20, 21]);
+        this.sprites.model.animations.add('hurt',   [24, 25, 26, 27]);
+        this.sprites.model.anchor.setTo(.5,.8);
+    }
+
+    Layers.sprites.add(this.sprites.model);
+
+    this.sprites.shadow = game.add.image(this.pos.x - 5*this.owner.side, this.pos.y, 'shadow');
+    this.sprites.shadow.anchor.setTo(.5, .5);
+    Layers.shadows.add(this.sprites.shadow);
+
+    this.sprites.spawn = game.add.image(this.pos.x - 5*this.owner.side, this.pos.y, 'spawn');
+    this.sprites.spawn.anchor.setTo(.5, .5);
+    Layers.bg.add(this.sprites.spawn);
+
+    this.sprites.spell = game.add.image(this.pos.x, this.pos.y, 'smoke');
+    this.sprites.spell.animations.add('poof');
+    this.sprites.spell.anchor.setTo(.5, .8);
+    Layers.spells.add(this.sprites.spell);
+
+    this.sprites.model.scale.x = this.owner.side * -1;
+
+    this.sprites.model.x = this.pos.x;
+    this.sprites.model.y = this.pos.y;
+
     this.respawn();
 }
 
@@ -151,10 +209,14 @@ Minion.prototype.respawn = function()
     
     this.updateStats();
     
-    this.pos.x = this.spawn.x;
-    this.pos.y = this.spawn.y;
+    this.pos.x = this.spawnPos.x;
+    this.pos.y = this.spawnPos.y;
     table.insert(this.timers, this.spawnTimer);
     this.new = false;
+
+    this.sprites.spell.x = this.pos.x;
+    this.sprites.spell.y = this.pos.y;
+    this.sprites.spell.animations.play('poof', 10, false);
 }
 
 Minion.prototype.activeTimer = function()
@@ -216,6 +278,10 @@ Minion.prototype.animate = function()
         }
         if ( timer.isDone() )
         {
+            if ( timer.id == "spawn" )
+            {
+                // remove invulnerability
+            }
             
             if ( timer.id == "unsummon" )
             {
@@ -270,6 +336,17 @@ Minion.prototype.animate = function()
                     this.controller.opponent.life = this.controller.opponent.life - Math.floor(this.power/shielding);
                     this.controller.opponent.lifeText = this.setStat(this.controller.opponent.life);
                 }
+
+
+                this.sprites.spell.x = this.pos.x;
+                this.sprites.spell.y = this.pos.y;
+
+                this.status = "idle";
+                this.sprites.model.visible = false;
+                this.sprites.spell.animations.play('poof', 10, false);
+
+                table.insert(this.timers, this.unsummonTimer);
+
             }
             
             table.remove(this.timers, 0);
@@ -322,11 +399,10 @@ Minion.prototype.move = function()
         this.pos.y += dir.y * (this.speed + haste);
     }
     
-    if ( ! this.inDuel && this.pos.dist(this.controller.opponent.pos) < 96 )
+    if ( ! this.inDuel && this.pos.dist(this.controller.opponent.pos) < 96)
     {
         table.insert(this.timers, this.attackTimer);
         this.status = "attack";
-        table.insert(this.timers, this.unsummonTimer);
     }
 }
 
@@ -341,36 +417,24 @@ Minion.prototype.render = function()
     
     var action = this.activeTimer() || tmp_action;
 
-    var flying = 0;
-    
-    if ( this.flying )
-    {
-        flying = 60;
-    }
-
-    Graphics.lineStyle(10, rgbToHex(128, 128, 255, 255, true) );
-    Graphics.beginFill(rgbToHex(128, 128, 255, 255, true), 0);
-    Graphics.drawEllipse(this.spawn.x, this.spawn.y + 30, 32 + 32 * Math.sin(ElapsedTime*5)/10, 8);
-    Graphics.endFill();
-
+    this.sprites.spawn.scale.setTo(1 + Math.sin(ElapsedTime*2)/10, 1 + Math.sin(ElapsedTime*2)/10);
 
     if ( this.isVisible() )
     {
+        this.sprites.model.visible = true;
+        this.sprites.shadow.visible = true;
 
+        this.sprites.shadow.position.setTo(this.pos.x - 5*this.owner.side, this.pos.y);
+        
         if ( action == "moving" )
         {
-            Graphics.lineStyle(0);
-            Graphics.beginFill(rgbToHex(32, 32, 32, 255, true), 1);
-            Graphics.drawEllipse(this.pos.x, this.pos.y + 30, 48 + 32 * Math.sin(ElapsedTime*5)/10 - flying/2, 16 - flying/10);
-            Graphics.endFill();
+            this.sprites.shadow.width = 64 - this.offset/3 + (64 - this.offset/3) * Math.sin(ElapsedTime*8)/10;
         }
         else
         {
-            Graphics.lineStyle(0);
-            Graphics.beginFill(rgbToHex(32, 32, 32, 255, true), 1);
-            Graphics.drawEllipse(this.pos.x, this.pos.y + 30, 48 + 32 * Math.sin(ElapsedTime*2)/10 - flying/2, 16 - flying/10);
-            Graphics.endFill();
+            this.sprites.shadow.width = 64 - this.offset/3 + (64 - this.offset/3) * Math.sin(ElapsedTime*2)/10;
         }
+
         
         if ( this.controller.side == 1 )
         {
@@ -381,38 +445,12 @@ Minion.prototype.render = function()
 			stroke(255, 0, 0, 255);
         }
 
-		Graphics.beginFill(rgbToHex(255, 181, 0, 255, true));
-		Graphics.drawRect(this.pos.x - 30, this.pos.y - 30 - flying, 60, 60);
-		Graphics.endFill();
-        
-		this.text.name.fontSize = 12;
-		this.text.name.fill = rgbToHex(255, 255, 255, 255);
-        this.text.name.setTextBounds(this.pos.x - 30, this.pos.y - 50 - flying, 60, 60)
-		
-		this.text.buffs.fontSize = 15;
-		this.text.buffs.fill = rgbToHex(255, 255, 255, 255);
-		this.text.buffs.text = this.buffs;
-        this.text.buffs.setTextBounds(this.pos.x - 30, this.pos.y - 8 - flying, 60, 60)
-
-		this.text.action.fontSize = 10;
-		this.text.action.fill = rgbToHex(255, 255, 255, 255);
-		this.text.action.text = action;
-        this.text.action.setTextBounds(this.pos.x - 30, this.pos.y + 15 - flying, 60, 60)
-
-
-		this.text.powerText.fontSize = 17;
-		this.text.powerText.fill = rgbToHex(255, 0, 0, 255);
-		this.text.powerText.text = this.powerText;
-        this.text.powerText.setTextBounds(this.pos.x - 30, this.pos.y + 34 + 17 - flying, 60, 60)
-
-		this.text.lifeText.fontSize = 17;
-		this.text.lifeText.fill = rgbToHex(0, 255, 0, 255);
-		this.text.lifeText.text = this.powerText;			
-        this.text.lifeText.setTextBounds(this.pos.x - 30, this.pos.y + 32 - flying, 60, 60)
-
+        drawText(this.text.name, 12, rgbToHex(255, 255, 255, 255), this.name + " " + this.buffs, this.pos.x - 80,   this.pos.y - 100 - this.offset, 160, 160);
+        drawText(this.text.action, 10, rgbToHex(255, 255, 255, 255), action, this.pos.x - 80,                       this.pos.y + 10 - this.offset, 160, 160);
+        drawText(this.text.lifeText, 17, rgbToHex(0, 255, 0, 255), this.lifeText, this.pos.x - 80,                  this.pos.y + 20 - this.offset, 160, 160);
+        drawText(this.text.powerText, 17, rgbToHex(255, 0, 0, 255), this.powerText, this.pos.x - 80,                this.pos.y + 39 - this.offset, 160, 160);
 
         this.text.name.alpha = 1;
-        this.text.buffs.alpha = 1;
         this.text.action.alpha = 1;
         this.text.powerText.alpha = 1;
         this.text.lifeText.alpha = 1;
@@ -420,11 +458,17 @@ Minion.prototype.render = function()
     else
     {
         this.text.name.alpha = 0;
-        this.text.buffs.alpha = 0;
         this.text.action.alpha = 0;
         this.text.powerText.alpha = 0;
         this.text.lifeText.alpha = 0;
+
+        this.sprites.model.visible = false;
+        this.sprites.shadow.visible = false;
     }
+
+    this.sprites.model.x = this.pos.x;
+    this.sprites.model.y = this.pos.y;
+    this.sprites.model.animations.play(this.status, 10, true);
 
 }
 

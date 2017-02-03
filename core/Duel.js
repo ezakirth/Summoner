@@ -20,8 +20,8 @@ function Duel(a, b)
     this.timers = Array();
     this.a = a;
     this.b = b;
-    this.t1 = new Timer(1, "phase1");
-    this.t2 = new Timer(1, "phase2");
+    this.t1 = new Timer(1000, "phase1");
+    this.t2 = new Timer(1000, "phase2");
 }
 
 Duel.prototype.processCombat = function(minion, target)

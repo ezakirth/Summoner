@@ -9,7 +9,7 @@ creatures.white = {
             life : 1,
             speed : 1,
             cost : 2,
-            castTime : 2,
+            castTime : 2000,
             abilities : Array( "firststrike" ),
             // button;
             icon : "👹",
@@ -25,7 +25,7 @@ creatures.white = {
             life : 1,
             speed : 1,
             cost : 1,
-            castTime : 1,
+            castTime : 1000,
             abilities : Array( "flying" ),
             // button;
             icon : "🐸",
@@ -41,7 +41,7 @@ creatures.white = {
             life : 2,
             speed : 1,
             cost : 3,
-            castTime : 1,
+            castTime : 1000,
             abilities : Array( "flying", "firststrike" ),
             // button;
             icon : "🐸",
@@ -57,7 +57,7 @@ creatures.white = {
             life : 4,
             speed : 1,
             cost : 4,
-            castTime : 1,
+            castTime : 1000,
             abilities : Array( "blocking", "aura friendlies 0 1" ),
             // button;
             icon : "🐸",
@@ -73,7 +73,7 @@ creatures.white = {
             life : 2,
             speed : 1,
             cost : 4,
-            castTime : 1,
+            castTime : 1000,
             abilities : Array( "heal 2" ),
             // button;
             icon : "🐸",
@@ -89,7 +89,7 @@ creatures.white = {
             life : 4,
             speed : 1,
             cost : 5,
-            castTime : 1,
+            castTime : 1000,
             abilities : Array( "flying", "lifelink" ),
             // button;
             icon : "🐸",
@@ -105,7 +105,7 @@ creatures.white = {
             power : 5,
             speed : 1,
             cost : 6,
-            castTime : 1,
+            castTime : 1000,
             abilities : Array( "flying", "firststrike" ),
             // button;
             icon : "🐸",

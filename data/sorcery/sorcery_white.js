@@ -8,7 +8,7 @@ sorcery.white = {
             life : 0,
             power : 1,
             cost : 1,
-            castTime : 1,
+            castTime : 1000,
             abilities : Array( "firststrike" ),
             // button;
             icon : "🍀",
@@ -23,7 +23,7 @@ sorcery.white = {
             life : 1,
             power : 1,
             cost : 2,
-            castTime : 2,
+            castTime : 2000,
             abilities : Array(),
             // button;
             icon : "🍃",
@@ -38,7 +38,7 @@ sorcery.white = {
             life : 0,
             power : 0,
             cost : 2,
-            castTime : 1,
+            castTime : 1000,
             abilities : Array( "lifelink" ),
             // button;
             icon : "❤️",
@@ -53,7 +53,7 @@ sorcery.white = {
             life : 0,
             power : 0,
             cost : 3,
-            castTime : 1,
+            castTime : 1000,
             abilities : Array( "demistify" ),
             // button;
             icon : "🍃",
@@ -68,7 +68,7 @@ sorcery.white = {
             life : 0,
             power : 0,
             cost : 5,
-            castTime : 3,
+            castTime : 3000,
             abilities : Array( "destroy" ),
             // button;
             icon : "🍃",

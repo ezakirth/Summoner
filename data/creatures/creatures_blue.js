@@ -9,7 +9,7 @@ creatures.blue = {
             life : 2,
             speed : 1,
             cost : 3,
-            castTime : 2,
+            castTime : 2000,
             abilities : Array( "flying" ),
             // button;
             icon : "🐉",
@@ -24,7 +24,7 @@ creatures.blue = {
             life : 4,
             speed : 1,
             cost : 4,
-            castTime : 2,
+            castTime : 2000,
             abilities : Array( "flying" ),
             // button;
             icon : "🐉",
@@ -39,7 +39,7 @@ creatures.blue = {
             life : 4,
             speed : 1,
             cost : 5,
-            castTime : 2,
+            castTime : 2000,
             abilities : Array( "flying" ),
             // button;
             icon : "🐉",
@@ -54,7 +54,7 @@ creatures.blue = {
             life : 6,
             speed : 1,
             cost : 6,
-            castTime : 2,
+            castTime : 2000,
             abilities : Array( "flying" ),
             // button;
             icon : "🐉",
@@ -70,7 +70,7 @@ creatures.blue = {
             life : 4,
             speed : 1,
             cost : 2,
-            castTime : 1,
+            castTime : 1000,
             abilities : Array( "blocking" ),
             // button;
             icon : "🐢",

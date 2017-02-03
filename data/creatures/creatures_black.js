@@ -9,7 +9,7 @@ creatures.black = {
             power : 2,
             speed : 1,
             cost : 3,
-            castTime : 1,
+            castTime : 1000,
             abilities : Array( "flying", "deathrattle1" ),
             // button;
             icon : "👹",
@@ -25,7 +25,7 @@ creatures.black = {
             power : 2,
             speed : 1,
             cost : 2,
-            castTime : 1,
+            castTime : 1000,
             abilities : Array( "respawnliability" ),
             // button;
             icon : "🐸",

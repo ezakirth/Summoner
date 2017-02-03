@@ -8,7 +8,7 @@ sorcery.red = {
             life : -1,
             power : 0,
             cost : 1,
-            castTime : 1,
+            castTime : 1000,
             abilities : Array( "noregeneration" ),
             // button;
             icon : "♨️",
@@ -23,7 +23,7 @@ sorcery.red = {
             life : 0,
             power : 3,
             cost : 1,
-            castTime : 1,
+            castTime : 1000,
             abilities : Array( "haste", "forceattack" ),
             // button;
             icon : "🍁",
@@ -38,7 +38,7 @@ sorcery.red = {
             life : -4,
             power : 0,
             cost : 4,
-            castTime : 1,
+            castTime : 1000,
             abilities : Array(),
             // button;
             icon : "🍁",
@@ -53,7 +53,7 @@ sorcery.red = {
             life : 0,
             power : 0,
             cost : 4,
-            castTime : 1,
+            castTime : 1000,
             abilities : Array( "betray", "haste", "forceattack" ),
             // button;
             icon : "🍁",
@@ -68,7 +68,7 @@ sorcery.red = {
             life : -6,
             power : 0,
             cost : 6,
-            castTime : 1,
+            castTime : 1000,
             abilities : Array(),
             // button;
             icon : "🍁",

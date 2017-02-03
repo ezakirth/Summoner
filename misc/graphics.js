@@ -47,6 +47,14 @@ function text(str, x, y)
 };
 
 
+function drawText(obj, size, col, text, x, y, w, h)
+{
+	obj.fontSize = size;
+	obj.fill = col;
+	obj.text = text;
+    obj.setTextBounds(x, y, w, h)
+}
+
 function fontSize(size)
 {
     textSize = size;

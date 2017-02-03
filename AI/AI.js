@@ -1,7 +1,7 @@
 function AI(player)
 {
     this.player = player;
-    this.spawn = new vec2(player.pos.x, player.pos.y);
+    this.spawnPos = new vec2(player.pos.x, player.pos.y);
     this.actions = Array();
 }
 
@@ -39,10 +39,15 @@ AI.prototype.findJob = function()
     if ( crystals.p2.crystalReady )
     {
         table.insert(this.actions, {type : "move", dest : crystals.p2.crystalPos});
-        table.insert(this.actions, {type : "move", dest : this.spawn});
+        table.insert(this.actions, {type : "move", dest : this.spawnPos});
     }
     else
     {
+        if ( this.player.mana >= 1 && this.player.summons.length < 1)
+        {
+            this.player.doAction(creatures.red.raging_goblin);
+        }
+
         if ( this.player.mana >= 1 && this.player.summons.length < 3)
         {
             this.player.doAction(creatures.red.raging_goblin);

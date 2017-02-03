@@ -4,14 +4,14 @@ function Crystals()
     
     this.p1 = {};
     this.p1.crystalPos = null;
-    this.p1.crystalDelay = 3;
+    this.p1.crystalDelay = 3000;
     this.p1.crystalCount = 0;
     this.p1.crystalReady = false;
     this.p1.crystalTimer = Array();
 
     this.p2 = {};
     this.p2.crystalPos = null;
-    this.p2.crystalDelay = 3;
+    this.p2.crystalDelay = 3000;
     this.p2.crystalCount = 0;
     this.p2.crystalReady = false;
     this.p2.crystalTimer = Array();
@@ -103,7 +103,7 @@ Crystals.prototype.draw = function()
                     }
 
                     owner.crystalReady = false;
-                    owner.crystalDelay = owner.crystalDelay + 3;
+                    owner.crystalDelay = owner.crystalDelay + 3000;
                     table.insert(owner.crystalTimer, new Timer(owner.crystalDelay, "crystal"));
                     return true;
                 }
