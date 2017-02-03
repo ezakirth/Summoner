@@ -21,7 +21,7 @@ var Layers = {};
 
 window.onload = function()
 {
-	game = new Phaser.Game(1024, 768, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+	game = new Phaser.Game("100", "100", Phaser.AUTO, '', { preload: preload, create: create, update: update });
 	
 	function preload ()
 	{
@@ -50,8 +50,8 @@ window.onload = function()
 		HEIGHT = game.stage.height;
 
 		bg = game.add.image(0, 0, 'bg');
-		bg.width = 1024;
-		bg.height = 768;
+		bg.width = WIDTH;
+		bg.height = HEIGHT;
 
 		Layers.bg = game.add.group();
 		Layers.bg.z = 0;

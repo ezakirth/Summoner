@@ -1,11 +1,3 @@
-function loadjs(filename)
-{
-	var fileref = document.createElement('script');
-	fileref.setAttribute("src", filename);
-	document.getElementsByTagName("head")[0].appendChild(fileref);
-}
-
-
 function printCard(card)
 {
     print(card.name);
