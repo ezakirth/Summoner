@@ -40,10 +40,10 @@ function Minion(ent, owner)
     
     
     this.timers = Array();
-    this.attackTimer = new Timer(500, "attack");
+    this.attackTimer = new Timer(250, "attack");
     this.deathTimer = new Timer(500, "death");
-    this.spawnTimer = new Timer(1000, "spawn");
-    this.unsummonTimer = new Timer(1000, "unsummon");
+    this.spawnTimer = new Timer(500, "spawn");
+    this.unsummonTimer = new Timer(500, "unsummon");
     
     this.new = true;
     
@@ -299,7 +299,7 @@ Minion.prototype.animate = function()
                 {
                     this.life = this.baseLife;
                     this.dying = false;
-                    this.owner.mana = this.owner.mana - 2;
+                    this.owner.mana -= 2;
                     this.respawn();
                 }
                 else
@@ -395,8 +395,8 @@ Minion.prototype.move = function()
     if ( ! this.blocking || this.forceattack )
     {
         var dir = this.controller.opponent.pos.subtract(this.pos).normalize();
-        this.pos.x += dir.x * (this.speed + haste);
-        this.pos.y += dir.y * (this.speed + haste);
+        this.pos.x += dir.x * (this.speed + haste) * game_speed;
+        this.pos.y += dir.y * (this.speed + haste) * game_speed;
     }
     
     if ( ! this.inDuel && this.pos.dist(this.controller.opponent.pos) < 96)
@@ -417,7 +417,7 @@ Minion.prototype.render = function()
     
     var action = this.activeTimer() || tmp_action;
 
-    this.sprites.spawn.scale.setTo(1 + Math.sin(ElapsedTime*2)/10, 1 + Math.sin(ElapsedTime*2)/10);
+    this.sprites.spawn.scale.setTo(1 + Math.sin(ElapsedTime/250)/10, 1 + Math.sin(ElapsedTime/250)/10);
 
     if ( this.isVisible() )
     {
@@ -428,11 +428,11 @@ Minion.prototype.render = function()
         
         if ( action == "moving" )
         {
-            this.sprites.shadow.width = 64 - this.offset/3 + (64 - this.offset/3) * Math.sin(ElapsedTime*8)/10;
+            this.sprites.shadow.width = 64 - this.offset/3 + (64 - this.offset/3) * Math.sin(ElapsedTime/60)/10;
         }
         else
         {
-            this.sprites.shadow.width = 64 - this.offset/3 + (64 - this.offset/3) * Math.sin(ElapsedTime*2)/10;
+            this.sprites.shadow.width = 64 - this.offset/3 + (64 - this.offset/3) * Math.sin(ElapsedTime/250)/10;
         }
 
         

@@ -88,8 +88,8 @@ AI.prototype.moveTo = function(action)
     {
         this.player.status = "moving";
         var dir = (pos.subtract(this.player.pos)).normalize();
-        this.player.pos.x += dir.x * (this.player.speed);
-        this.player.pos.y += dir.y * (this.player.speed);
+        this.player.pos.x += dir.x * (this.player.speed) * game_speed;
+        this.player.pos.y += dir.y * (this.player.speed) * game_speed;
     }
     
 }

@@ -87,7 +87,7 @@ Hero.prototype.doAction = function(action)
         else
         {
             table.insert(this.timers, new Timer(action.castTime, action.type));
-            this.mana = this.mana - action.cost;
+            this.mana -= action.cost;
             this.castSpell = action;
         }
     }
@@ -236,7 +236,7 @@ Hero.prototype.animate = function()
     
     if ( this.shielding )
     {
-        this.mana = this.mana - DeltaTime;
+        this.mana -= 3*(DeltaTime/1000);
     }
     else
     {
@@ -246,7 +246,7 @@ Hero.prototype.animate = function()
         {
             regen = min_regen;
         }
-        this.mana = this.mana + DeltaTime/regen;
+        this.mana += 3*(DeltaTime/1000)/regen;
         if ( this.mana > this.crystals )
         {
             this.mana = this.crystals;
@@ -331,7 +331,7 @@ Hero.prototype.animate = function()
 
             for(obj in minion.sprites)
             {
-                minion.sprites[sprite].destroy();
+                minion.sprites[obj].destroy();
             }
         }
     });
@@ -352,11 +352,11 @@ Hero.prototype.render = function()
     
     if ( this.status == "moving" )
     {
-        this.sprites.shadow.width = 96 + 64 * Math.sin(ElapsedTime*8)/10;
+        this.sprites.shadow.width = 96 + 64 * Math.sin(ElapsedTime/60)/10;
     }
     else
     {
-        this.sprites.shadow.width = 96 + 64 * Math.sin(ElapsedTime*2)/10;
+        this.sprites.shadow.width = 96 + 64 * Math.sin(ElapsedTime/250)/10;
     }
     
     if ( this.side == 1 )

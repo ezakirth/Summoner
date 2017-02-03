@@ -27,8 +27,8 @@ Stick.prototype.render = function()
                 dir = vec.normalize();
             }
 
-            this.owner.pos.x += dir.x * this.owner.speed * this.dist/50;
-            this.owner.pos.y += dir.y * this.owner.speed * this.dist/50;
+            this.owner.pos.x += game_speed * dir.x * this.owner.speed * this.dist/50;
+            this.owner.pos.y += game_speed * dir.y * this.owner.speed * this.dist/50;
 
 
 

@@ -2,6 +2,7 @@ var game = null;
 var Graphics = null;
 var test = null;
 var fps = null;
+var game_speed = 1;
 
 var Sprite = null;
 BEGAN = 1;
@@ -113,6 +114,8 @@ window.onload = function()
 
 		inputHandler();
 
+		game_speed = (game.time.elapsedMS*144)/1000;
+
 		draw();
 	}
 
@@ -127,22 +130,22 @@ function inputHandler()
 
 	if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
 	{
-		p1.pos.y -= p1.speed;
+		p1.pos.y -= game_speed * p1.speed;
 		p1.status = "moving";
 	}
 	if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN))
 	{
-		p1.pos.y += p1.speed;
+		p1.pos.y += game_speed * p1.speed;
 		p1.status = "moving";
 	}
 	if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
 	{
-		p1.pos.x -= p1.speed;
+		p1.pos.x -= game_speed * p1.speed;
 		p1.status = "moving";
 	}
 	if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
 	{
-		p1.pos.x += p1.speed;
+		p1.pos.x += game_speed * p1.speed;
 		p1.status = "moving";
 	}
 	if (game.input.keyboard.isDown(Phaser.Keyboard.A))

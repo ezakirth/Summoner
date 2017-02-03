@@ -154,12 +154,12 @@ Duel.prototype.placeMinions = function()
     this.a.status = "moving";
     this.b.status = "moving";
     var dir = Math.atan2(this.destA.y - this.a.pos.y, this.destA.x - this.a.pos.x);
-    this.a.pos.x = this.a.pos.x + Math.cos(dir) / 1.5;
-    this.a.pos.y = this.a.pos.y + Math.sin(dir) / 1.5;
+    this.a.pos.x += game_speed * Math.cos(dir) / 1.5;
+    this.a.pos.y += game_speed * Math.sin(dir) / 1.5;
     
     dir = Math.atan2(this.destB.y - this.b.pos.y, this.destB.x - this.b.pos.x);
-    this.b.pos.x = this.b.pos.x + Math.cos(dir) / 1.5;
-    this.b.pos.y = this.b.pos.y + Math.sin(dir) / 1.5;
+    this.b.pos.x += game_speed * Math.cos(dir) / 1.5;
+    this.b.pos.y += game_speed * Math.sin(dir) / 1.5;
     
     if ( this.destA.dist(this.a.pos) < 2 && this.destB.dist(this.b.pos) < 2 )
     {

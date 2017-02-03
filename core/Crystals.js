@@ -93,9 +93,9 @@ Crystals.prototype.draw = function()
                 {
                     if (player.crystals < 10)
                     {
-                        player.crystals = player.crystals + 1;
+                        player.crystals += 1;
                     }
-                    player.mana = player.mana + 1;
+                    player.mana += 1;
                     
                     if (player.mana > player.crystals)
                     {
