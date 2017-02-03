@@ -12,8 +12,8 @@ function Duel(a, b)
     var midY = (a.pos.y + b.pos.y)/2;
     var midX = (a.pos.x + b.pos.x)/2;
     
-    this.destA = new vec2(midX - a.controller.side * 64, midY);
-    this.destB = new vec2(midX - b.controller.side * 64, midY);
+    this.destA = new vec2(midX - a.controller.side * 32, midY);
+    this.destB = new vec2(midX - b.controller.side * 32, midY);
     
     this.ready = false;
     this.done = false;

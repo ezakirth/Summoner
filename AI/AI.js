@@ -38,32 +38,41 @@ AI.prototype.findJob = function()
 {
     if ( crystals.p2.crystalReady )
     {
-        table.insert(this.actions, {type : "move", dest : crystals.p2.crystalPos});
-        table.insert(this.actions, {type : "move", dest : this.spawnPos});
+        table.insert(this.actions, new Action({type : "move", goal : crystals.p2.crystalPos}));
+        table.insert(this.actions, new Action({type : "move", goal : this.spawnPos}));
+        return
     }
-    else
-    {
-        if ( this.player.mana >= 1 && this.player.summons.length < 1)
-        {
-            this.player.doAction(creatures.red.raging_goblin);
-        }
 
-        if ( this.player.mana >= 1 && this.player.summons.length < 3)
-        {
-            this.player.doAction(creatures.red.raging_goblin);
-        }
-        else
-        if ( this.player.mana >= 2 && this.player.summons.length < 5)
-        {
-            this.player.doAction(creatures.red.goblin_hero);
-        }
-        else
-        if ( this.player.mana >= 2 && this.player.summons.length == 5)
-        {
-            this.player.doAction(sorcery.red.reckless_charge);
-        }
-        
+    if ( this.player.mana >= 1 && this.player.summons.length < 1)
+    {
+//        table.insert(this.actions, new Action({type : "move", goal : new vec2(Math.floor(WIDTH/2 + (WIDTH/2)*Math.random()), Math.floor(HEIGHT*Math.random()))}));
+        table.insert(this.actions, new Action({type : "cast", goal : creatures.red.raging_goblin}));
+//        table.insert(this.actions, new Action({type : "move", goal : this.spawnPos}));
+        return
     }
+/*
+    if ( this.player.mana >= 2 && this.player.summons.length < 2)
+    {
+        table.insert(this.actions, new Action({type : "move", goal : new vec2(Math.floor(WIDTH/2 + (WIDTH/2)*Math.random()), Math.floor(HEIGHT*Math.random()))}));
+        table.insert(this.actions, new Action({type : "cast", goal : creatures.red.goblin_hero}));
+        table.insert(this.actions, new Action({type : "move", goal : this.spawnPos}));
+        return
+    }
+
+    if ( this.player.mana >= 1 && this.player.summons.length < 2)
+    {
+        table.insert(this.actions, new Action({type : "move", goal : new vec2(Math.floor(WIDTH/2 + (WIDTH/2)*Math.random()), Math.floor(HEIGHT*Math.random()))}));
+        table.insert(this.actions, new Action({type : "cast", goal : creatures.red.raging_goblin}));
+        table.insert(this.actions, new Action({type : "move", goal : this.spawnPos}));
+        return
+    }
+    
+    if ( this.player.mana >= 3)
+    {
+        table.insert(this.actions, new Action({type : "cast", goal : sorcery.red.reckless_charge}));
+        return
+    }*/
+
 }
 
 
@@ -73,11 +82,19 @@ AI.prototype.doAction = function(action)
     {
         this.moveTo(action);
     }
+
+    if ( action.type == "cast" )
+    {
+        this.player.doAction(action.goal, action);
+        action.type == "casting"
+    }    
+
+    
 }
 
 AI.prototype.moveTo = function(action)
 {
-    var pos = action.dest;
+    var pos = action.goal;
     
     if ( this.player.pos.dist(pos) < 5 )
     {
@@ -98,5 +115,5 @@ function Action(action)
 {
     this.done = false;
     this.type = action.type;
-    this.dest = action.dest;
+    this.goal = action.goal;
 }

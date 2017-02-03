@@ -133,11 +133,22 @@ function draw()
     
 
 
-    DeltaTime = game.time.elapsedMS;
-    ElapsedTime += DeltaTime;
+
+
+    inputHandler();
+
+    game_speed = 1;//(game.time.elapsedMS*144)/1000;
+    Layers.sprites.sort('y', Phaser.Group.SORT_ASCENDING);
+
+    ElapsedTime = game.time.time - game.time._started;
+
+    DeltaTime = ElapsedTime - lastElapsedTime;
+    lastElapsedTime = ElapsedTime;
+    fps.text = game.time.fps;
 
 }
 
+var lastElapsedTime = 0;
 
 function touched(touch)
 {

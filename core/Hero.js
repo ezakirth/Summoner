@@ -16,6 +16,8 @@ function Hero(ent, showGui)
     this.shielding = false;
     this.updateStats();
     
+    this.AIaction = new Action({});
+
     this.status = "idle";
     // 1 = left side, -1 = right side;
     this.side = 1;
@@ -40,6 +42,12 @@ function Hero(ent, showGui)
 	this.text.manaText = game.add.text(0, 0, this.manaText, { boundsAlignH: "center", boundsAlignV : "center" });
 	this.text.lifeText = game.add.text(0, 0, this.life + " " + this.lifeText, { boundsAlignH: "center", boundsAlignV : "center" });
 	
+    Layers.sprites.add(this.text.name);
+    Layers.sprites.add(this.text.dialog);
+    Layers.sprites.add(this.text.action);
+    Layers.sprites.add(this.text.manaText);
+    Layers.sprites.add(this.text.lifeText);
+
 	
 }
 
@@ -75,8 +83,10 @@ Hero.prototype.summon = function(creature)
     }
 }
 
-Hero.prototype.doAction = function(action)
+Hero.prototype.doAction = function(action, AIaction)
 {
+    this.AIaction = AIaction || this.AIaction;
+
     if ( ! this.activeTimer() && action.cost <= this.mana )
     {
         this.gui.setPage("home");
@@ -268,27 +278,37 @@ Hero.prototype.animate = function()
                 this.spawnCrystal();
             }
             
-            if ( timer.id == "creatures" )
+            if ( timer.id == "sorcery" || timer.id == "enchantments" || timer.id == "creatures" )
             {
-                var minion = new Minion(this.castSpell, this);
-                
-                if ( this.enchantments.length > 0 )
+                if ( timer.id == "creatures" )
                 {
-                    var enchant = this.enchantments[0];
-                    minion.power = minion.power + enchant.power;
-                    minion.life = minion.life + enchant.life;
-                    minion.updateStats();
+                    var minion = new Minion(this.castSpell, this);
+                    
+                    if ( this.enchantments.length > 0 )
+                    {
+                        var enchant = this.enchantments[0];
+                        minion.power = minion.power + enchant.power;
+                        minion.life = minion.life + enchant.life;
+                        minion.updateStats();
+                    }
+                    
+                    table.insert(this.summons, minion);
+                    this.castSpell = null;
                 }
                 
-                table.insert(this.summons, minion);
-                this.castSpell = null;
+                if ( timer.id == "sorcery" || timer.id == "enchantments" )
+                {
+                    this.resolveSpell(this.castSpell);
+                    this.castSpell = null;
+                }
+
+                if (this.AIaction.done == false)
+                {
+                    this.AIaction.done = true
+                }
             }
-            
-            if ( timer.id == "sorcery" || timer.id == "enchantments" )
-            {
-                this.resolveSpell(this.castSpell);
-                this.castSpell = null;
-            }
+
+
             
             if ( timer.id == "attack" )
             {
@@ -336,7 +356,7 @@ Hero.prototype.animate = function()
         }
     });
     
-    if ( dead_minion )
+    if ( dead_minion !== null )
     {
         table.remove(this.summons, dead_minion);
     }

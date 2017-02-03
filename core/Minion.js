@@ -40,9 +40,10 @@ function Minion(ent, owner)
     
     
     this.timers = Array();
-    this.attackTimer = new Timer(250, "attack");
-    this.deathTimer = new Timer(500, "death");
-    this.spawnTimer = new Timer(500, "spawn");
+    this.attackTimer = new Timer(500, "attack");
+    this.deathTimer = new Timer(1000, "death");
+    this.removeTimer = new Timer(500, "remove");    
+    this.spawnTimer = new Timer(1000, "spawn");
     this.unsummonTimer = new Timer(500, "unsummon");
     
     this.new = true;
@@ -67,13 +68,17 @@ function Minion(ent, owner)
     drawText(this.text.lifeText, 17, rgbToHex(0, 255, 0, 255), this.lifeText, this.pos.x - 80,                  this.pos.y + 20 - this.offset, 160, 160);
     drawText(this.text.powerText, 17, rgbToHex(255, 0, 0, 255), this.powerText, this.pos.x - 80,                this.pos.y + 39 - this.offset, 160, 160);
 
+    Layers.sprites.add(this.text.name);
+    Layers.sprites.add(this.text.action);
+    Layers.sprites.add(this.text.lifeText);
+    Layers.sprites.add(this.text.powerText);
 
     if (this.flying)
     {
         this.sprites.model = game.add.image(this.pos.x, this.pos.y, 'bat');
         this.sprites.model.animations.add('idle',   [0]);
         this.sprites.model.animations.add('moving', [0, 1, 2, 3]);
-        this.sprites.model.animations.add('dead',   [8, 9, 10, 11, 12, 13]);
+        this.sprites.model.animations.add('death',   [8, 9, 10, 11, 12, 13]);
         this.sprites.model.animations.add('hurt',   [16, 17]);
         this.sprites.model.animations.add('attack', [24, 25, 26, 27, 28, 29, 30, 31]);
         this.sprites.model.anchor.setTo(.5, 1.25); 
@@ -81,15 +86,20 @@ function Minion(ent, owner)
     else
     {
         this.sprites.model = game.add.image(this.pos.x, this.pos.y, 'goblin');
-        this.sprites.model.animations.add('idle',   [0]);
+        this.sprites.model.animations.add('idle',   [16]);
         this.sprites.model.animations.add('moving', [0, 1, 2, 3, 4, 5, 6, 7]);
-        this.sprites.model.animations.add('dead',   [8, 9, 10, 11, 12, 13, 14]);
+        this.sprites.model.animations.add('death',   [8, 9, 10, 11, 12, 13, 14]);
         this.sprites.model.animations.add('attack', [16, 17, 18, 19, 20, 21]);
         this.sprites.model.animations.add('hurt',   [24, 25, 26, 27]);
         this.sprites.model.anchor.setTo(.5,.8);
     }
 
     Layers.sprites.add(this.sprites.model);
+
+    this.sprites.spell = game.add.image(this.pos.x, this.pos.y, 'smoke');
+    this.sprites.spell.animations.add('poof');
+    this.sprites.spell.anchor.setTo(.5, .8);
+    Layers.sprites.add(this.sprites.spell);
 
     this.sprites.shadow = game.add.image(this.pos.x - 5*this.owner.side, this.pos.y, 'shadow');
     this.sprites.shadow.anchor.setTo(.5, .5);
@@ -99,17 +109,16 @@ function Minion(ent, owner)
     this.sprites.spawn.anchor.setTo(.5, .5);
     Layers.bg.add(this.sprites.spawn);
 
-    this.sprites.spell = game.add.image(this.pos.x, this.pos.y, 'smoke');
-    this.sprites.spell.animations.add('poof');
-    this.sprites.spell.anchor.setTo(.5, .8);
-    Layers.spells.add(this.sprites.spell);
+
 
     this.sprites.model.scale.x = this.owner.side * -1;
 
     this.sprites.model.x = this.pos.x;
     this.sprites.model.y = this.pos.y;
 
-    this.respawn();
+    this.sprites.spell.x = this.pos.x;
+    this.sprites.spell.y = this.pos.y;
+    this.sprites.spell.animations.play('poof', 10, false);  
 }
 
 Minion.prototype.checkAbilities = function()
@@ -211,12 +220,13 @@ Minion.prototype.respawn = function()
     
     this.pos.x = this.spawnPos.x;
     this.pos.y = this.spawnPos.y;
-    table.insert(this.timers, this.spawnTimer);
     this.new = false;
 
-    this.sprites.spell.x = this.pos.x;
-    this.sprites.spell.y = this.pos.y;
-    this.sprites.spell.animations.play('poof', 10, false);
+
+
+
+
+    
 }
 
 Minion.prototype.activeTimer = function()
@@ -265,7 +275,7 @@ Minion.prototype.animate = function()
         this.timers = Array();
         table.insert(this.timers, this.deathTimer);
         this.dying = true;
-        this.status = "idle";
+        this.status = "death";
     }
     
     var timer = this.timers[0];
@@ -280,16 +290,54 @@ Minion.prototype.animate = function()
         {
             if ( timer.id == "spawn" )
             {
+                this.sprites.spell.x = this.pos.x;
+                this.sprites.spell.y = this.pos.y;
+                this.sprites.spell.animations.play('poof', 10, false);        
+
                 // remove invulnerability
+                this.text.name.alpha = 1;
+                this.text.action.alpha = 1;
+                this.text.powerText.alpha = 1;
+                this.text.lifeText.alpha = 1;
+                this.sprites.model.visible = true;
+                this.sprites.shadow.visible = true;
             }
             
             if ( timer.id == "unsummon" )
             {
+                this.sprites.spell.x = this.pos.x;
+                this.sprites.spell.y = this.pos.y;
+                this.sprites.spell.animations.play('poof', 10, false);                
+                
                 this.respawn();
-            }
+
+                table.insert(this.timers, this.spawnTimer);
+                this.text.name.alpha = 0;
+                this.text.action.alpha = 0;
+                this.text.powerText.alpha = 0;
+                this.text.lifeText.alpha = 0;
+                this.sprites.model.visible = false;
+                this.sprites.shadow.visible = false;            }
             
+            if ( timer.id == "remove")
+            {
+                this.dead = true;
+            }
+
             if ( timer.id == "death" )
             {
+                this.text.name.alpha = 0;
+                this.text.action.alpha = 0;
+                this.text.powerText.alpha = 0;
+                this.text.lifeText.alpha = 0;
+                this.sprites.model.visible = false;
+                this.sprites.shadow.visible = false;
+
+
+                this.sprites.spell.x = this.pos.x;
+                this.sprites.spell.y = this.pos.y;
+                this.sprites.spell.animations.play('poof', 10, false);      
+
                 if ( this.deathrattle1 )
                 {
                     this.controller.resolveSpell(specials.deathrattle1);
@@ -316,7 +364,8 @@ Minion.prototype.animate = function()
                         });
                     }
                     crystals.addShards(new vec2(this.pos.x, this.pos.y, this.cost/2));
-                    this.dead = true;
+                    table.insert(this.timers, this.removeTimer);
+                    
                 }
             }
             
@@ -337,15 +386,15 @@ Minion.prototype.animate = function()
                     this.controller.opponent.lifeText = this.setStat(this.controller.opponent.life);
                 }
 
+                if (! this.dying)
+                {
+                    this.sprites.spell.x = this.pos.x;
+                    this.sprites.spell.y = this.pos.y;
 
-                this.sprites.spell.x = this.pos.x;
-                this.sprites.spell.y = this.pos.y;
+                    this.status = "idle";
 
-                this.status = "idle";
-                this.sprites.model.visible = false;
-                this.sprites.spell.animations.play('poof', 10, false);
-
-                table.insert(this.timers, this.unsummonTimer);
+                    table.insert(this.timers, this.unsummonTimer);
+                }
 
             }
             
@@ -399,7 +448,7 @@ Minion.prototype.move = function()
         this.pos.y += dir.y * (this.speed + haste) * game_speed;
     }
     
-    if ( ! this.inDuel && this.pos.dist(this.controller.opponent.pos) < 96)
+    if ( ! this.inDuel && this.pos.dist(this.controller.opponent.pos) < 64)
     {
         table.insert(this.timers, this.attackTimer);
         this.status = "attack";
@@ -421,8 +470,6 @@ Minion.prototype.render = function()
 
     if ( this.isVisible() )
     {
-        this.sprites.model.visible = true;
-        this.sprites.shadow.visible = true;
 
         this.sprites.shadow.position.setTo(this.pos.x - 5*this.owner.side, this.pos.y);
         
@@ -450,25 +497,26 @@ Minion.prototype.render = function()
         drawText(this.text.lifeText, 17, rgbToHex(0, 255, 0, 255), this.lifeText, this.pos.x - 80,                  this.pos.y + 20 - this.offset, 160, 160);
         drawText(this.text.powerText, 17, rgbToHex(255, 0, 0, 255), this.powerText, this.pos.x - 80,                this.pos.y + 39 - this.offset, 160, 160);
 
-        this.text.name.alpha = 1;
-        this.text.action.alpha = 1;
-        this.text.powerText.alpha = 1;
-        this.text.lifeText.alpha = 1;
-    }
-    else
-    {
-        this.text.name.alpha = 0;
-        this.text.action.alpha = 0;
-        this.text.powerText.alpha = 0;
-        this.text.lifeText.alpha = 0;
 
-        this.sprites.model.visible = false;
-        this.sprites.shadow.visible = false;
     }
+
 
     this.sprites.model.x = this.pos.x;
     this.sprites.model.y = this.pos.y;
-    this.sprites.model.animations.play(this.status, 10, true);
+
+    if (this.status == "death")
+    {
+        this.sprites.model.animations.play(this.status, 7, true);
+    }
+    else
+    if (this.status == "attack")
+    {
+        this.sprites.model.animations.play(this.status, 12, true);
+    }
+    else
+    {
+        this.sprites.model.animations.play(this.status, 10, true);
+    }
 
 }
 

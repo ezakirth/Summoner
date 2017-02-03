@@ -71,14 +71,16 @@ window.onload = function()
 		p1.sprites.model.animations.add('idle',   [0, 1, 2, 3, 4, 5, 6, 7]);
 		p1.sprites.model.animations.add('moving',   [12, 13, 14, 15, 16, 17, 18, 19]);
 		p1.sprites.model.animations.add('death',   [24, 25, 26, 27, 28, 29, 30, 31]);
-		p1.sprites.model.animations.add('attack', [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47]);
+		p1.sprites.model.animations.add('attack', [36, 38, 39, 40, 43, 46]);
+//		p1.sprites.model.animations.add('attack', [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47]);
 		p1.sprites.model.anchor.setTo(.5, 1);
 
 		p2.sprites.model = game.add.image(p2.pos.x -70, p2.pos.y - 100, 'knight');
 		p2.sprites.model.animations.add('idle',   [0, 1, 2, 3, 4, 5, 6, 7]);
 		p2.sprites.model.animations.add('moving',   [12, 13, 14, 15, 16, 17, 18, 19]);
 		p2.sprites.model.animations.add('death',   [24, 25, 26, 27, 28, 29, 30, 31]);
-		p2.sprites.model.animations.add('attack', [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47]);
+		p2.sprites.model.animations.add('attack', [36, 38, 39, 40, 43, 46]);
+//		p2.sprites.model.animations.add('attack', [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47]);
 		p2.sprites.model.anchor.setTo(.5, 1);
 		p2.sprites.model.scale.x = -1
 
@@ -110,11 +112,6 @@ window.onload = function()
 	function update()
 	{
 
-		fps.text = game.time.fps;
-
-		inputHandler();
-
-		game_speed = (game.time.elapsedMS*144)/1000;
 
 		draw();
 	}
@@ -151,17 +148,24 @@ function inputHandler()
 	if (game.input.keyboard.isDown(Phaser.Keyboard.A))
 	{
 		p1.attack();
-		p1.sprites.model.animations.play('attack', 10, false);
 	}
 
-	p1.sprites.model.animations.play(p1.status, 10, true);
+
+	if (p1.status == "attack")
+	{
+		p1.sprites.model.animations.play('attack', 12, false);
+	}
+	else
+	{
+		p1.sprites.model.animations.play(p1.status, 10, true);
+	}
+
 	p1.sprites.model.x = p1.pos.x;
 	p1.sprites.model.y = p1.pos.y;
-	
+
 	p2.sprites.model.animations.play(p2.status, 10, true);
 	p2.sprites.model.x = p2.pos.x;
 	p2.sprites.model.y = p2.pos.y;
-
 
 	if (game.input.mousePointer.isDown)
     {
