@@ -35,7 +35,7 @@ parameter.watch = function(){};
 
 
 
-WIDTH = 1024;
-HEIGHT = 768;
+WIDTH = 960;
+HEIGHT = 640;
 ElapsedTime = 0;
 DeltaTime = 0;

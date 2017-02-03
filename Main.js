@@ -17,8 +17,8 @@ function setup()
     p2 = new Hero(heroes.basic.blue);
     p1.opponent = p2;
     p2.opponent = p1;
-    p1.pos = new vec2(600, 300);
-    p2.pos = new vec2(WIDTH - 100, 300);
+    p1.pos = new vec2(200, 300);
+    p2.pos = new vec2(WIDTH - 200, 300);
     p2.side = -1;
     
 
