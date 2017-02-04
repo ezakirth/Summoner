@@ -1,1 +1,1 @@
-enchantments = {}
+enchantments = {};

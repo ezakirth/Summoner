@@ -1,32 +1,24 @@
-function Duels()
-{
+function Duels() {
     this.list = Array();
 }
 
-Duels.prototype.add = function(a, b)
-{
+Duels.prototype.add = function (a, b) {
     var duel = new Duel(a, b);
-    table.insert(duel.timers, duel.t1);
-    table.insert(duel.timers, duel.t2);
-    table.insert(this.list, duel);
+    duel.timers.push(duel.t1);
+    duel.timers.push(duel.t2);
+    this.list.push(duel);
 }
 
-Duels.prototype.run = function()
-{
-    if ( this.list[0] == null )
-    {
-        table.remove(this.list, 0);
+Duels.prototype.run = function () {
+    if (this.list[0] == null) {
+        this.list.splice(0, 1);
     }
-    
+
     var done_duel;
-    this.list.forEach((duel, index) =>
-    {
-        if ( duel.done )
-        {
+    this.list.forEach((duel, index) => {
+        if (duel.done) {
             this.list[index] = null;
-        }
-        else
-        {
+        } else {
             duel.run();
         }
     });

@@ -1,152 +1,166 @@
-function Crystals()
-{
-    this.shards = Array();
-    
-    this.p1 = {};
-    this.p1.crystalPos = null;
-    this.p1.crystalDelay = 3000;
-    this.p1.crystalCount = 0;
-    this.p1.crystalReady = false;
-    this.p1.crystalTimer = Array();
-
-    this.p2 = {};
-    this.p2.crystalPos = null;
-    this.p2.crystalDelay = 3000;
-    this.p2.crystalCount = 0;
-    this.p2.crystalReady = false;
-    this.p2.crystalTimer = Array();
-    
-    this.owners = Array();
-    table.insert(this.owners, this.p1);
-    table.insert(this.owners, this.p2);
-
-    this.summoned = Array();
-    table.insert(this.p1.crystalTimer, new Timer(this.p1.crystalDelay, "crystal"));
-    table.insert(this.p2.crystalTimer, new Timer(this.p2.crystalDelay, "crystal"));
+/**
+ * @desc Crystal handling class
+ * @param void
+ * @return void
+ */
+function Crystals() {
+    this.crystals = Array();
 }
 
-Crystals.prototype.spawnCrystal = function(owner)
-{
-    owner.crystalReady = true;
-    if ( owner == this.p1 )
-    {
-        owner.crystalPos = new vec2(Math.random()*450, 200 + Math.random()*200);
-    }
-    else
-    {
-        owner.crystalPos = new vec2(560 + Math.random()*450, 200 + Math.random()*200);
-    }
-}
 
-Crystals.prototype.forceSpawnCrystal = function(player)
-{
-    var crystal = Array();
-    crystal.crystalPos = new vec2(player.pos.x + 100 * player.side, player.pos.y);
-    table.insert(this.summoned, crystal);
-}
+/**
+ * @desc Generates a crystal sprite
+ * @param string:type, vec2:pos, Hero:owner
+ * @return object
+ */
+Crystals.prototype.generateCrystal = function (type, pos, owner) {
+    var crystal = {};
+    crystal.owner = owner;
+    crystal.pos = new vec2(pos.x, pos.y);
+    crystal.type = type;
+    crystal.value = (type == "crystal") ? 1 : .5;;
+    crystal.capIncrease = (type == "crystal") ? 1 : 0;
 
-Crystals.prototype.addShards = function(shard)
-{
-    table.insert(this.shards, Array(new vec2(shard.x, shard.y), shard.val));
-}
+    crystal.model = game.add.image(pos.x, pos.y, 'crystal_blue');
+    crystal.model.anchor.setTo(.5, 1);
+    crystal.model.animations.add('rotate');
+    crystal.model.animations.play('rotate', 16, true);
+    crystal.model.scale.setTo(crystal.value, crystal.value);
 
-Crystals.prototype.draw = function()
-{
-    fill(255, 255, 255, 255);
-    if ( this.shards[0] == null )
-    {
-        table.remove(this.shards, 0);
+    crystal.shadow = game.add.image(pos.x, pos.y, 'shadow');
+    crystal.shadow.anchor.setTo(.5, .5);
+    crystal.shadow.scale.setTo(crystal.value, crystal.value);
+
+    Layers.sprites.add(crystal.model);
+    Layers.shadows.add(crystal.shadow);
+
+    return crystal;
+};
+
+/**
+ * @desc Generates a crystal
+ * @param vec2:pos, Hero:owner
+ * @return void
+ */
+Crystals.prototype.addCrystal = function (pos, owner) {
+    var crystal = this.generateCrystal("crystal", pos, owner);
+
+    this.crystals.push(crystal);
+};
+
+/**
+ * @desc Generates shards
+ * @param vec2:pos, float:value
+ * @return void
+ */
+Crystals.prototype.addShards = function (pos, value) {
+    var nb_shards = Math.ceil(value);
+    var shard, px, py;
+
+    for (var i = 0; i < nb_shards; i++) {
+        px = pos.x + (-.5 + Math.random()) * 50
+        py = pos.y + (-.5 + Math.random()) * 50
+
+        shard = this.generateCrystal("shard", new vec2(px, py), null);
+
+        this.crystals.push(shard);
     }
-    if ( this.summoned[0] == null )
-    {
-        table.remove(this.summoned, 0);
+};
+
+
+/**
+ * @desc Crystal spawn timer processing
+ * @param void
+ * @return void
+ */
+Crystals.prototype.processTimers = function () {
+    // removed crystals that have been picked up
+    if (this.crystals[0] == null) {
+        this.crystals.splice(0, 1);
     }
-    
-    
-    this.owners.forEach((owner) =>
+
+    players.forEach((player) =>
     {
-        var timer = owner.crystalTimer[0];
-        if ( timer )
+        // get first available timer
+        var timer = player.crystal.timer[0];
+        if (timer)
         {
-            if ( ! timer.started )
+            if (!timer.started)
             {
                 timer.reset();
             }
-            if ( timer.isDone() )
+
+            // spawn a crystal once the timer is complete
+            if (timer.isDone())
             {
-                if ( timer.id == "crystal" )
+                if (timer.id == "crystal")
                 {
-                    this.spawnCrystal(owner);
+                    player.crystal.ready = true;
+
+                    // if crystal is for player2, spawn it on the right side of the screen
+                    var offset = (player == p1) ? 0 : WIDTH / 2;
+
+                    this.addCrystal(new vec2(offset + Math.random() * WIDTH / 2, Math.random() * (HEIGHT - 200) + 200), player);
                 }
-                table.remove(owner.crystalTimer, 0);
+                // remove used up timer
+                player.crystal.timer.splice(0, 1);
             }
         }
-        
-        if ( owner.crystalReady )
-        {
-            fontSize(60);
-            text("💎", owner.crystalPos.x, owner.crystalPos.y);
-            players.some((player) =>
-            {
-                var dist = owner.crystalPos.dist(player.pos);
-                if ( dist < 64 )
-                {
-                    if (player.crystals < 10)
-                    {
-                        player.crystals += 1;
-                    }
-                    player.mana += 1;
-                    
-                    if (player.mana > player.crystals)
-                    {
-                        player.mana = player.crystals;
-                    }
+    });
+};
 
-                    owner.crystalReady = false;
-                    owner.crystalDelay = owner.crystalDelay + 3000;
-                    table.insert(owner.crystalTimer, new Timer(owner.crystalDelay, "crystal"));
-                    return true;
-                }
-            });
-        }
-    });
-    
-    this.summoned.forEach((player, index) =>
+/**
+ * @desc Crystal pickup processing
+ * @param void
+ * @return void
+ */
+Crystals.prototype.processCrystals = function () {
+    // test each crystal against players
+    this.crystals.forEach((crystal, index) =>
     {
-        if ( crystal )
+        players.some((player) =>
         {
-            fontSize(60);
-            text("💎", crystal.crystalPos.x, crystal.crystalPos.y);
-            players.some((player) =>
+            if (crystal)
             {
-                var dist = crystal.crystalPos.dist(player.pos);
-                if ( dist < 64 && ! crystal.taken )
+                // if a player collides with the crystal, pick it up
+                if (crystal.pos.dist(player.pos) < 32)
                 {
-                    player.crystals = player.crystals + 1;
-                    player.mana = player.mana + 1;
-                    this.summoned[index] = null;
+                    player.mana += crystal.value;
+                    player.crystal.count = crystal.capIncrease;
+
+                    // if the crystal wasn't summoned by a player
+                    if (crystal.type == "crystal" && crystal.owner)
+                    {
+                        // add respawn delay only if crystal wasn't stolen
+                        if (crystal.owner == player)
+                        {
+                            crystal.owner.crystal.delay += 3000;
+                        }
+                        crystal.owner.crystal.ready = false;
+
+                        // start new crystal timer
+                        crystal.owner.crystal.timer.push(new Timer(crystal.owner.crystal.delay, "crystal"));
+                    }
+                    
+                    // destroy phaser objects
+                    crystal.model.destroy();
+                    crystal.shadow.destroy();
+
+                    this.crystals[index] = null;
                     return true;
                 }
-            });
-        }
+            }
+        });
     });
-        
-    fontSize(17);
-    this.shards.forEach((shard, index) =>
-    {
-        if ( shard )
-        {
-            text(shard[1] + "💎", shard[0].x, shard[0].y);
-            players.some((player) =>
-            {
-                var dist = shard[0].dist(player.pos);
-                if ( dist < 64 )
-                {
-                    player.mana = player.mana + shard[1];
-                    this.shards[index] = null;
-                    return true;
-                }
-            });
-        }
-    });
-}
+};
+
+
+/**
+ * @desc Main process function
+ * @param void
+ * @return void
+ */
+Crystals.prototype.process = function () {
+    this.processTimers();
+    this.processCrystals();
+};

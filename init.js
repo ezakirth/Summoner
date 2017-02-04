@@ -2,6 +2,12 @@ var game = null;
 var Graphics = null;
 var test = null;
 var game_speed = 1;
+var lastElapsedTime = 0;
+
+WIDTH = 960;
+HEIGHT = 640;
+ElapsedTime = 0;
+DeltaTime = 0;
 
 var Sprite = null;
 BEGAN = 1;
@@ -16,153 +22,196 @@ Touch.state = 0;
 var bg = null;
 var vignette = null;
 var Layers = {};
-var center = null;
-
-
-window.onload = function()
-{
-	game = new Phaser.Game(960, 640, Phaser.AUTO, '', { preload: preload, create: create, update: update });
-	
-	function preload ()
-	{
-		game.time.advancedTiming = true;
-
-		game.load.spritesheet('knight', 'assets/heroes/knight.png', 160, 160);
-		game.load.spritesheet('goblin', 'assets/creatures/goblin.png', 160, 160);
-		game.load.spritesheet('bat', 'assets/creatures/bat.png', 160, 160);
-
-
-		game.load.image('bg', 'assets/specials/bg.png');
-		game.load.image('vignette', 'assets/specials/vignette.png');
-
-		game.load.spritesheet('smoke', 'assets/specials/smoke.png', 256, 256);
-		game.load.image('spawn', 'assets/specials/spawn.png');
-		game.load.image('shadow', 'assets/specials/shadow.png');
-
-
-	}
-
-
-	function create ()
-	{
-		Graphics = game.add.graphics();
-		WIDTH = game.stage.width;
-		HEIGHT = game.stage.height;
-
-		bg = game.add.image(0, 0, 'bg');
-		bg.width = WIDTH;
-		bg.height = HEIGHT;
-
-		Layers.bg = game.add.group();
-		Layers.bg.z = 0;
-
-		Layers.shadows = game.add.group();
-		Layers.shadows.z = 1;
-
-		Layers.sprites = game.add.group();
-		Layers.sprites.z = 2;
-
-		Layers.spells = game.add.group();
-		Layers.spells.z = 3;
-
-		setup();
-
-		p1.sprites.model = game.add.sprite(p1.pos.x, p1.pos.y, 'knight');
-		p1.sprites.model.animations.add('idle',   [0, 1, 2, 3, 4, 5, 6, 7]);
-		p1.sprites.model.animations.add('moving',   [12, 13, 14, 15, 16, 17, 18, 19]);
-		p1.sprites.model.animations.add('death',   [24, 25, 26, 27, 28, 29, 30, 31]);
-		p1.sprites.model.animations.add('attack', [36, 38, 39, 40, 43, 46]);
-//		p1.sprites.model.animations.add('attack', [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47]);
-		p1.sprites.model.anchor.setTo(.5, 1);
-
-		p2.sprites.model = game.add.sprite(p2.pos.x -70, p2.pos.y - 100, 'knight');
-		p2.sprites.model.animations.add('idle',   [0, 1, 2, 3, 4, 5, 6, 7]);
-		p2.sprites.model.animations.add('moving',   [12, 13, 14, 15, 16, 17, 18, 19]);
-		p2.sprites.model.animations.add('death',   [24, 25, 26, 27, 28, 29, 30, 31]);
-		p2.sprites.model.animations.add('attack', [36, 38, 39, 40, 43, 46]);
-//		p2.sprites.model.animations.add('attack', [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47]);
-		p2.sprites.model.anchor.setTo(.5, 1);
-		p2.sprites.model.scale.x = -1
-
-
-		center = game.add.sprite(0, 0);
-
-
-		p1.sprites.shadow = game.add.image(p1.pos.x + 5, p1.pos.y + 60, 'shadow');
-		p2.sprites.shadow = game.add.image(p2.pos.x + 5, p2.pos.y + 60, 'shadow');
-		p1.sprites.shadow.anchor.setTo(.5, .5);
-		p2.sprites.shadow.anchor.setTo(.5, .5);
-
-		Layers.sprites.add(p1.sprites.model);
-		Layers.sprites.add(p2.sprites.model);
-
-		Layers.bg.add(bg);
-		Layers.shadows.add(p1.sprites.shadow);
-		Layers.shadows.add(p2.sprites.shadow);
-
-
-		vignette = game.add.image(0, 0, 'vignette');
-		vignette.width = bg.width;
-		vignette.height = bg.height;
 
 
 
+game = new Phaser.Game(960, 640, Phaser.AUTO, '', {
+	preload: preload,
+	create: create,
+	update: update
+});
 
-game.camera.follow(center);
-//game.camera.bounds.setTo(-3000, -3000, 6000, 6000);
+function preload() {
+	game.time.advancedTiming = true;
 
-	}
-	
-	function update()
-	{
-    game.debug.cameraInfo(game.camera, 32, 32);
-    game.debug.spriteCoords(center, 32, 500);
+	game.load.spritesheet('knight', 'assets/heroes/knight.png', 160, 160);
+	game.load.spritesheet('goblin', 'assets/creatures/goblin.png', 160, 160);
+	game.load.spritesheet('bat', 'assets/creatures/bat.png', 160, 160);
+	game.load.spritesheet('crystal_blue', 'assets/crystals/crystal_blue.png', 64, 64);
+
+	game.load.image('bg', 'assets/specials/bg.png');
+	game.load.image('vignette', 'assets/specials/vignette.png');
+
+	game.load.spritesheet('smoke', 'assets/specials/smoke.png', 256, 256);
+	game.load.image('spawn', 'assets/specials/spawn.png');
+	game.load.image('shadow', 'assets/specials/shadow.png');
+
+
+}
+
+
+function create() {
+	Graphics = game.add.graphics();
+	WIDTH = game.stage.width;
+	HEIGHT = game.stage.height;
+
+	bg = game.add.image(0, 0, 'bg');
+	bg.width = WIDTH;
+	bg.height = HEIGHT;
+
+	Layers.bg = game.add.group();
+	Layers.bg.z = 0;
+
+	Layers.shadows = game.add.group();
+	Layers.shadows.z = 1;
+
+	Layers.sprites = game.add.group();
+	Layers.sprites.z = 2;
+
+	Layers.spells = game.add.group();
+	Layers.spells.z = 3;
+
+
+    // hero;
+    p1 = new Hero(heroes.basic.green, true);
+    p2 = new Hero(heroes.basic.blue);
+    p1.opponent = p2;
+    p2.opponent = p1;
+    p1.pos = new vec2(200, 300);
+    p2.pos = new vec2(WIDTH - 200, 300);
+
+    p2.side = -1;
+    p2.sprites.model.scale.x = p2.side;
+
+
+    players = Array();
+    players.push(p1);
+    players.push(p2);
+
+    crystals = new Crystals();
+    duels = new Duels();
+
+    p2.mana = 3;
+    p2.crystal.count = 3;
+    p2.doAction(creatures.red.raging_goblin);
+
+    ai = new AI(p2);
+    ai.active = false;
+
+
+
+	Layers.bg.add(bg);
+
+
+	vignette = game.add.image(0, 0, 'vignette');
+	vignette.width = bg.width;
+	vignette.height = bg.height;
+
+}
+
+function update() {
+	ai.process();
+
+	var entities = p1.all();
+	entities.forEach((entity) => {
+		entity.process();
+	});
+
+	duels.run();
+
+	/*
+		var mid = new vec2((p1.pos.x + p2.pos.x)/2, (p1.pos.y + p2.pos.y)/2);
+		var dist = (new vec2(-128, 0).add(p1.pos)).dist(p2.pos.add(new vec2(128,0)));
+		ortho(mid.x - dist/2 , mid.x + dist/2 , mid.y - (dist*3/4)/2, mid.y + (dist*3/4)/2);
+	*/
+
+
+	p1.enchantments.forEach((enchantment) => {
+		//sprite("Planet Cute.Gem Green", 135, 505);
+		//text(enchantment.name, 135, 505);
+	});
+
+	crystals.process();
+
+	entities.forEach((entity) => {
+		entity.render();
+	});
+
+
+
+	p1.gui.render();
+	p1.gui.stick.render();
+
+
+
+
+
+	inputHandler();
+
+	game_speed = 1; //(game.time.elapsedMS*144)/1000;
+	Layers.sprites.sort('y', Phaser.Group.SORT_ASCENDING);
+
+	ElapsedTime = game.time.time - game.time._started;
+
+	DeltaTime = ElapsedTime - lastElapsedTime;
+	lastElapsedTime = ElapsedTime;
+
 	game.debug.text(game.time.fps || '--', 2, 14, "#00ff00");
+}
 
-		draw();
+
+
+function touched(touch) {
+	if (touch.x < WIDTH / 2) {
+		p1.gui.stick.touched(touch);
+	} else {
+		p1.gui.touched(touch);
 	}
+}
 
-};
 
-
-function inputHandler()
-{
+function inputHandler() {
 
 
 
 
-	if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
-	{
+	if (game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
 		p1.pos.y -= game_speed * p1.speed;
 		p1.status = "moving";
 	}
-	if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN))
-	{
+	if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
 		p1.pos.y += game_speed * p1.speed;
 		p1.status = "moving";
 	}
-	if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
-	{
+	if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
 		p1.pos.x -= game_speed * p1.speed;
 		p1.status = "moving";
 	}
-	if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
-	{
+	if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
 		p1.pos.x += game_speed * p1.speed;
 		p1.status = "moving";
 	}
-	if (game.input.keyboard.isDown(Phaser.Keyboard.A))
-	{
+
+
+	if (game.input.keyboard.isDown(Phaser.Keyboard.Q)) {
+		game.camera.scale.x += .01;
+		game.camera.scale.y += .01;
+	}
+	if (game.input.keyboard.isDown(Phaser.Keyboard.S)) {
+		game.camera.scale.x -= .01;
+		game.camera.scale.y -= .01;
+
+	}
+
+
+	if (game.input.keyboard.isDown(Phaser.Keyboard.A)) {
 		p1.attack();
 	}
 
 
-	if (p1.status == "attack")
-	{
+	if (p1.status == "attack") {
 		p1.sprites.model.animations.play('attack', 12, false);
-	}
-	else
-	{
+	} else {
 		p1.sprites.model.animations.play(p1.status, 10, true);
 	}
 
@@ -172,45 +221,42 @@ function inputHandler()
 	p2.sprites.model.animations.play(p2.status, 10, true);
 	p2.sprites.model.x = p2.pos.x;
 	p2.sprites.model.y = p2.pos.y;
-/*
-	if (game.input.mousePointer.isDown)
-    {
-        if (Touch.state == ENDED)
-            Touch.state = BEGAN;
-        else
-            Touch.state = MOVING;
 
-        Touch.x = game.input.mousePointer.x;
-        Touch.y = game.input.mousePointer.y;
-        touched(Touch)
-    }
-    else
-    if (game.input.mousePointer.isUp && Touch.state != ENDED)
-    {
-        Touch.state = ENDED;
-        Touch.x = game.input.mousePointer.x;
-        Touch.y = game.input.mousePointer.y;
-        touched(Touch)
-    }
-*/
-	if (game.input.pointer1.isDown)
-    {
-        if (Touch.state == ENDED)
-            Touch.state = BEGAN;
-        else
-            Touch.state = MOVING;
+	if (game.input.mousePointer.isDown) {
+		if (Touch.state == ENDED)
+			Touch.state = BEGAN;
+		else
+			Touch.state = MOVING;
 
-        Touch.x = game.input.pointer1.x;
-        Touch.y = game.input.pointer1.y;
-        touched(Touch)
-    }
-    else
-    if (game.input.pointer1.isUp && Touch.state != ENDED)
-    {
-        Touch.state = ENDED;
-        Touch.x = game.input.pointer1.x;
-        Touch.y = game.input.pointer1.y;
-        touched(Touch)
-    }
+		Touch.x = game.input.mousePointer.x;
+		Touch.y = game.input.mousePointer.y;
+		touched(Touch)
+	} else
+	if (game.input.mousePointer.isUp && Touch.state != ENDED) {
+		Touch.state = ENDED;
+		Touch.x = game.input.mousePointer.x;
+		Touch.y = game.input.mousePointer.y;
+		touched(Touch)
+	}
+	/*
+		if (game.input.pointer1.isDown)
+	    {
+	        if (Touch.state == ENDED)
+	            Touch.state = BEGAN;
+	        else
+	            Touch.state = MOVING;
+
+	        Touch.x = game.input.pointer1.x;
+	        Touch.y = game.input.pointer1.y;
+	        touched(Touch)
+	    }
+	    else
+	    if (game.input.pointer1.isUp && Touch.state != ENDED)
+	    {
+	        Touch.state = ENDED;
+	        Touch.x = game.input.pointer1.x;
+	        Touch.y = game.input.pointer1.y;
+	        touched(Touch)
+	    }*/
 
 }

@@ -1,1 +1,1 @@
-sorcery = {}
+sorcery = {};
