@@ -109,8 +109,12 @@ function draw()
     var dist = (new vec2(-128, 0).add(p1.pos)).dist(p2.pos.add(new vec2(128,0)));
     var mid = new vec2((p1.pos.x + p2.pos.x)/2, (p1.pos.y + p2.pos.y)/2);
     
+center.x = (p1.pos.x + p2.pos.x)/2;
+
     ortho(mid.x - dist/2 , mid.x + dist/2 , mid.y - (dist*3/4)/2, mid.y + (dist*3/4)/2);
-    
+
+//console.log(mid.x);
+
     p1.enchantments.forEach((enchantment) =>
     {
         sprite("Planet Cute.Gem Green", 135, 505);
@@ -144,7 +148,6 @@ function draw()
 
     DeltaTime = ElapsedTime - lastElapsedTime;
     lastElapsedTime = ElapsedTime;
-    fps.text = game.time.fps;
 
 }
 
