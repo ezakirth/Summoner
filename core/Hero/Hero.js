@@ -113,7 +113,7 @@ Hero.prototype.processManaRegen = function()
         if (regen > min_regen)
             regen = min_regen;
 
-        this.mana += 3 * (DeltaTime / 1000) / regen;
+        this.mana += (DeltaTime / 1000) / regen;
         if (this.mana > this.crystal.count)
             this.mana = this.crystal.count;
     }
@@ -155,7 +155,7 @@ Hero.prototype.processTimers = function () {
                     this.castSpell = null;
                 }
 
-                if (this.AIaction.done == false) {
+                if (this.AIaction && this.AIaction.done == false) {
                     this.AIaction.done = true
                 }
             }

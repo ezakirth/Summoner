@@ -21,6 +21,13 @@ AI.prototype.process = function ()
 }
 
 AI.prototype.findJob = function () {
+    if (this.action.done)
+    {
+        this.action.priority = 0;
+        this.action.type = "move";
+        this.action.goal = this.spawnPos;
+        this.action.done = false;
+    }
 
     /*
     if (this.player.status == "idle" && this.player.summons.length < 1)
@@ -69,13 +76,6 @@ AI.prototype.findJob = function () {
         }
     }
 
-    if (this.action.done)
-    {
-        this.action.priority = 0;
-        this.action.type = "move";
-        this.action.goal = this.spawnPos;
-        this.action.done = false;
-    }
 }
 
 AI.prototype.findCrystal = function ()

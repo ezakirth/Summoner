@@ -101,7 +101,7 @@ function create() {
 
     ai = new AI(p1);
     ai2 = new AI(p2);
-    ai.active = false;
+  //  ai.active = false;
    // ai2.active = false;
 
 
