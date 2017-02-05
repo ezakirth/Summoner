@@ -8,26 +8,34 @@ Minion.prototype.setupText = function()
     this.text = {};
     this.text.name = game.add.text(0, 0, this.name, {
         boundsAlignH: "center",
-        boundsAlignV: "center"
+        boundsAlignV: "center",
+        fontSize: 12,
+        fill: "#ffffff"
     });
     this.text.action = game.add.text(0, 0, this.status, {
         boundsAlignH: "center",
-        boundsAlignV: "center"
+        boundsAlignV: "center",
+        fontSize: 10,
+        fill: "#ffffff"
     });
     this.text.powerText = game.add.text(0, 0, this.powerText, {
         boundsAlignH: "center",
-        boundsAlignV: "center"
+        boundsAlignV: "center",
+        fontSize: 17,
+        fill: "#00ff00"
     });
     this.text.lifeText = game.add.text(0, 0, this.lifeText, {
         boundsAlignH: "center",
-        boundsAlignV: "center"
+        boundsAlignV: "center",
+        fontSize: 17,
+        fill: "#ff0000"
     });
 
-
-    drawText(this.text.name, 12, rgbToHex(255, 255, 255, 255), this.name + " " + this.buffs, this.pos.x - 80, this.pos.y - 100 - this.offset, 160, 160);
-    drawText(this.text.action, 10, rgbToHex(255, 255, 255, 255), "", this.pos.x - 80, this.pos.y + 10 - this.offset, 160, 160);
-    drawText(this.text.lifeText, 17, rgbToHex(0, 255, 0, 255), this.lifeText, this.pos.x - 80, this.pos.y + 20 - this.offset, 160, 160);
-    drawText(this.text.powerText, 17, rgbToHex(255, 0, 0, 255), this.powerText, this.pos.x - 80, this.pos.y + 39 - this.offset, 160, 160);
+    drawText(this.text.name, this.name + " " + this.buffs, this.pos.x - 80, this.pos.y - 100 - this.offset, 160, 160);
+    drawText(this.text.action, "", this.pos.x - 80, this.pos.y + 10 - this.offset, 160, 160);
+    drawText(this.text.lifeText, this.lifeText, this.pos.x - 80, this.pos.y + 20 - this.offset, 160, 160);
+    drawText(this.text.powerText, this.powerText, this.pos.x - 80, this.pos.y + 39 - this.offset, 160, 160);
+    
 
     Layers.sprites.add(this.text.name);
     Layers.sprites.add(this.text.action);
@@ -117,10 +125,10 @@ Minion.prototype.render = function () {
             this.sprites.shadow.width = 64 - this.offset / 3 + (64 - this.offset / 3) * Math.sin(ElapsedTime / 250) / 10;
         }
 
-        drawText(this.text.name, 12, rgbToHex(255, 255, 255, 255), this.name + " " + this.buffs, this.pos.x - 80, this.pos.y - 100 - this.offset, 160, 160);
-        drawText(this.text.action, 10, rgbToHex(255, 255, 255, 255), action, this.pos.x - 80, this.pos.y + 10 - this.offset, 160, 160);
-        drawText(this.text.lifeText, 17, rgbToHex(0, 255, 0, 255), this.lifeText, this.pos.x - 80, this.pos.y + 20 - this.offset, 160, 160);
-        drawText(this.text.powerText, 17, rgbToHex(255, 0, 0, 255), this.powerText, this.pos.x - 80, this.pos.y + 39 - this.offset, 160, 160);
+        drawText(this.text.name, this.name + " " + this.buffs, this.pos.x - 80, this.pos.y - 100 - this.offset, 160, 160);
+        drawText(this.text.action, action, this.pos.x - 80, this.pos.y + 10 - this.offset, 160, 160);
+        drawText(this.text.lifeText, this.lifeText, this.pos.x - 80, this.pos.y + 20 - this.offset, 160, 160);
+        drawText(this.text.powerText, this.powerText, this.pos.x - 80, this.pos.y + 39 - this.offset, 160, 160);
 
 
     }

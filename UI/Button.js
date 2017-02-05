@@ -14,15 +14,20 @@ function Button(obj, owner, pos, page) {
     this.text = {};
     this.text.icon = game.add.text(0, 0, this.icon, {
         boundsAlignH: "center",
-        boundsAlignV: "center"
+        boundsAlignV: "center",
+        fill: "#000000"
     });
     this.text.name = game.add.text(0, 0, this.name, {
         boundsAlignH: "center",
-        boundsAlignV: "center"
+        boundsAlignV: "center",
+        fill: "#000000",
+        fontSize: 12
     });
     this.text.cost = game.add.text(0, 0, this.cost, {
         boundsAlignH: "center",
-        boundsAlignV: "center"
+        boundsAlignV: "center",
+        fill: "#000000",
+        fontSize: 15
     });
 
     if (pos) {
@@ -44,27 +49,19 @@ Button.prototype.render = function () {
     if (this.type != "action") {
         this.text.icon.fontSize = 25;
         this.text.icon.setTextBounds(this.pos.x - this.w / 2, this.pos.y - this.h / 2 + 8, this.w, this.h);
-        this.text.name.fontSize = 12;
-        this.text.name.fill = rgbToHex(0, 0, 0, 255);
         this.text.name.setTextBounds(this.pos.x - this.w / 2, this.pos.y + 12, this.w, this.h);
     } else {
         this.text.icon.fontSize = 40;
         this.text.icon.setTextBounds(this.pos.x - this.w / 2, this.pos.y - this.h / 2 + 6, this.w, this.h);
-        this.text.name.fontSize = 12;
-        this.text.name.fill = rgbToHex(0, 0, 0, 255);
         this.text.name.setTextBounds(this.pos.x - this.w / 2, this.pos.y + 18, this.w, this.h);
     }
 
 
     if (this.type != "action") {
         if (this.id != "home" && this.id != "next") {
-            this.text.name.fontSize = 12;
-            this.text.name.fill = rgbToHex(0, 0, 0, 255);
             this.text.name.setTextBounds(this.pos.x - this.w / 2, this.pos.y + 8, this.w, this.h);
         }
 
-        this.text.cost.fontSize = 15;
-        this.text.cost.fill = rgbToHex(0, 0, 0, 255);
         this.text.cost.setTextBounds(this.pos.x - this.w / 2, this.pos.y + 18, this.w, this.h);
     }
 }

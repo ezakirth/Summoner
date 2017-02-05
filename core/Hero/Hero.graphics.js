@@ -6,11 +6,11 @@
 Hero.prototype.setupText = function()
 {
     this.text = {
-        name : game.add.text(0, 0, this.name, {boundsAlignH: "center", boundsAlignV: "center"}),
-        dialog : game.add.text(0, 0, "", {boundsAlignH: "center", boundsAlignV: "center"}),
-        action : game.add.text(0, 0, this.status, {boundsAlignH: "center", boundsAlignV: "center"}),
-        manaText : game.add.text(0, 0, this.manaText, {boundsAlignH: "center", boundsAlignV: "center"}),
-        lifeText : game.add.text(0, 0, this.life + " " + this.lifeText, {boundsAlignH: "center", boundsAlignV: "center"}),
+        name : game.add.text(0, 0, this.name, {boundsAlignH: "center", boundsAlignV: "center", fontSize: 17, fill: "#ffffff"}),
+        dialog : game.add.text(0, 0, "", {boundsAlignH: "center", boundsAlignV: "center", fontSize: 17, fill: "#ffffff"}),
+        action : game.add.text(0, 0, this.status, {boundsAlignH: "center", boundsAlignV: "center", fontSize: 10, fill: "#ffffff"}),
+        manaText : game.add.text(0, 0, this.manaText, {boundsAlignH: "center", boundsAlignV: "center", fontSize: 17, fill: "#00ff00"}),
+        lifeText : game.add.text(0, 0, this.life + " " + this.lifeText, {boundsAlignH: "center", boundsAlignV: "center", fontSize: 8, fill: "#00ffff"}),
     };
 
     Layers.sprites.add(this.text.name);
@@ -81,7 +81,7 @@ Hero.prototype.render = function ()
 
         // draw text bubble
         //Graphics.drawRect(this.pos.x - (10 + 10*name.length)/2 + 100*this.side, this.pos.y - 96 , 10 + 10*name.length, 60);
-        drawText(this.text.dialog, 17, rgbToHex(0, 0, 0, 255), name, this.pos.x - (10 + 10 * name.length) / 2 + 100 * this.side, this.pos.y - 74, 10 + 10 * name.length, 60);
+        drawText(this.text.dialog, name, this.pos.x - (10 + 10 * name.length) / 2 + 100 * this.side, this.pos.y - 74, 10 + 10 * name.length, 60);
         this.text.dialog.alpha = 1;
     }
     else
@@ -89,8 +89,8 @@ Hero.prototype.render = function ()
         this.text.dialog.alpha = 0;
     }
 
-    drawText(this.text.name, 17, rgbToHex(255, 255, 255, 255), this.name, this.pos.x - 80, this.pos.y - 140, 160, 160);
-    drawText(this.text.action, 10, rgbToHex(255, 255, 255, 255), action, this.pos.x - 80, this.pos.y, 160, 160);
-    drawText(this.text.lifeText, 17, rgbToHex(0, 255, 0, 255), this.life + " " + this.lifeText, this.pos.x - 80, this.pos.y + 12, 160, 160);
-    drawText(this.text.manaText, 8, rgbToHex(0, 255, 255, 255), this.manaText, this.pos.x - 80, this.pos.y + 37, 160, 160);
+    drawText(this.text.name, this.name, this.pos.x - 80, this.pos.y - 140, 160, 160);
+    drawText(this.text.action, action, this.pos.x - 80, this.pos.y, 160, 160);
+    drawText(this.text.lifeText, this.life + " " + this.lifeText, this.pos.x - 80, this.pos.y + 12, 160, 160);
+    drawText(this.text.manaText, this.manaText, this.pos.x - 80, this.pos.y + 37, 160, 160);
 };
