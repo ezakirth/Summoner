@@ -82,33 +82,16 @@ Minion.prototype.checkAbilities = function () {
     });
 
     var buffs = "";
-    if (this.firststrike) {
-        buffs = buffs + "🔪";
-    }
-    if (this.trample) {
-        buffs = buffs + "🐘";
-    }
-    if (this.lifelink) {
-        buffs = buffs + "❤️";
-    }
-    if (this.flying) {
-        buffs = buffs + "✈️";
-    }
-    if (this.haste) {
-        buffs = buffs + "🐇";
-    }
-    if (this.deathtouch) {
-        buffs = buffs + "💀";
-    }
-    if (this.spellproof) {
-        buffs = buffs + "✳️";
-    }
-    if (this.spellburn) {
-        buffs = buffs + "💥";
-    }
-    if (this.regeneration && !this.noregeneration) {
-        buffs = buffs + "♻️";
-    }
+    if (this.firststrike) buffs = buffs + "🔪";
+    if (this.trample) buffs = buffs + "🐘";
+    if (this.lifelink) buffs = buffs + "❤️";
+    if (this.flying) buffs = buffs + "✈️";
+    if (this.haste) buffs = buffs + "🐇";
+    if (this.deathtouch) buffs = buffs + "💀";
+    if (this.spellproof) buffs = buffs + "✳️";
+    if (this.spellburn) buffs = buffs + "💥";
+    if (this.regeneration && !this.noregeneration) buffs = buffs + "♻️";
+
     this.buffs = buffs;
 }
 
@@ -120,8 +103,9 @@ Minion.prototype.updateStats = function () {
 Minion.prototype.respawn = function () {
     this.inDuel = false;
     this.duel = null;
+    this.dying = false;
 
-    this.tempabilities = Array();
+    this.tempAbilities = Array();
 
     this.controller = this.owner;
 
@@ -143,11 +127,6 @@ Minion.prototype.respawn = function () {
     this.pos.y = this.spawnPos.y;
     this.new = false;
 
-
-
-
-
-
 }
 
 Minion.prototype.activeTimer = function () {
@@ -163,10 +142,13 @@ Minion.prototype.activeTimer = function () {
     }
 }
 
-Minion.prototype.checkEnemy = function () {
+Minion.prototype.checkEnemy = function ()
+{
     this.controller.opponent.summons.some((minion) => {
-        if (minion != this && !minion.activeTimer() && this.pos.dist(minion.pos) < 64) {
-            if ((!this.flying && !minion.flying) || (this.flying && minion.flying)) {
+        if (minion != this && !minion.activeTimer() && this.pos.dist(minion.pos) < 64)
+        {
+            if (this.flying == minion.flying && !minion.dying)
+            {
                 duels.add(this, minion);
                 return true;
             }
@@ -208,7 +190,6 @@ Minion.prototype.process = function () {
                 this.sprites.spell.animations.play('poof', 10, false);
 
                 this.respawn();
-
                 this.timers.push(this.spawnTimer);
 
                 this.hide();
@@ -231,9 +212,9 @@ Minion.prototype.process = function () {
 
                 if (this.regeneration && !this.noregeneration && this.owner.mana >= 2) {
                     this.life = this.baseLife;
-                    this.dying = false;
                     this.owner.mana -= 2;
                     this.respawn();
+                    this.timers.push(this.spawnTimer);
                 } else {
                     if (this.goblinbuff) {
                         this.owner.auras.some((aura, index) => {

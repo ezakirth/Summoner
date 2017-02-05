@@ -20,7 +20,7 @@ function Hero(ent, showGui) {
     this.shielding = false;
     this.updateStats();
 
-    this.AIaction = new Action({});
+    this.AIaction = null;
 
     this.status = "idle";
     // 1 = left side, -1 = right side;

@@ -91,11 +91,18 @@ function create() {
     crystals = new Crystals();
     duels = new Duels();
 
-   // p2.doAction(creatures.red.raging_goblin);
+/*
+	p2.crystal.count = 10;
+	p2.mana = 10;
+
+	p1.crystal.count = 10;
+	p1.mana = 10;
+*/
 
     ai = new AI(p1);
     ai2 = new AI(p2);
-    //ai.active = false;
+    ai.active = false;
+   // ai2.active = false;
 
 
 

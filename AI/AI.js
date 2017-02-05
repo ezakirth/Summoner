@@ -1,103 +1,135 @@
 function AI(player) {
     this.player = player;
     this.spawnPos = new vec2(player.pos.x, player.pos.y);
-    this.actions = Array();
+    this.action = {
+        type : "none",
+        goal : null,
+        priority: 0,
+        done: true
+    };
+
     this.active = true;
 }
 
-AI.prototype.process = function () {
-    if (this.active) {
-        if (this.actions.length == 0) {
-            this.findJob();
-        } else {
-            var job = this.actions[0];
-            if (job == null) {
-                this.actions.splice(0, 1);
-            } else {
-                this.doAction(job);
+AI.prototype.process = function ()
+{
+    if (this.active)
+    {
+        this.findJob();
+        this.processJob();
+     }
+}
 
-                this.actions.forEach((action, index) => {
-                    if (action.done) {
-                        this.actions[index] = null;
-                    }
-                });
+AI.prototype.findJob = function () {
+
+    /*
+    if (this.player.status == "idle" && this.player.summons.length < 1)
+    {
+        console.log("ok");
+        this.actions.push(new Action({type : "cast", goal : creatures.red.raging_goblin}));
+    }
+    if (true) return;
+*/
+
+    if (this.action.priority < 3)
+    {
+        if (this.player.crystal.ready)
+        {
+            this.action.priority = 3;
+            this.action.type = "move";
+            this.action.goal = this.player.crystal.pos;
+            this.action.done = false;
+        }
+    }
+
+    if (this.action.priority < 2)
+    {
+        if ( this.player.mana >= 2 && this.player.summons.length < 2)
+        {
+            this.action.priority = 2;
+            this.action.type = "cast";
+            this.action.goal = creatures.red.goblin_hero;
+            this.action.done = false;
+        }
+    }
+
+
+    if (this.action.priority < 1)
+    {
+        if (this.player.mana < this.player.crystal.count) {
+            var foundCrystal = this.findCrystal();
+
+            if (foundCrystal)
+            {
+                this.action.priority = 1;
+                this.action.type = "move";
+                this.action.goal = foundCrystal.pos;
+                this.action.done = false;
             }
         }
     }
 
+    if (this.action.done)
+    {
+        this.action.priority = 0;
+        this.action.type = "move";
+        this.action.goal = this.spawnPos;
+        this.action.done = false;
+    }
 }
 
-AI.prototype.findJob = function () {
-    if (this.player.crystal.ready) {
-        this.actions.push(new Action({
-            type: "move",
-            goal: this.player.crystal.pos
-        }));
-        this.actions.push(new Action({
-            type: "move",
-            goal: this.spawnPos
-        }));
-        return
-    }
-
-    var offset = (this.player == p1) ? 0 : WIDTH / 2;
-    // if crystal is for player2, spawn it on the right side of the screen
-    var pos = new vec2(offset + Math.random() * WIDTH / 2, Math.random() * (HEIGHT - 200) + 200);
-
-    if ( this.player.mana >= 2 && this.player.summons.length < 2)
+AI.prototype.findCrystal = function ()
+{
+    var found = null;
+    crystals.crystals.some((obj) =>
+    {
+        if (obj)
         {
-            this.actions.push(new Action({type : "move", goal : pos}));
-            this.actions.push(new Action({type : "cast", goal : creatures.red.goblin_hero}));
-            this.actions.push(new Action({type : "move", goal : this.spawnPos}));
-            return
-        }
+            // check on left side if player1, right side if player 2
+            var proxyTest = (this.player == p1) ? obj.pos.x <= WIDTH/2 : obj.pos.x >= WIDTH/2;
 
-        if ( this.player.mana >= 1 && this.player.summons.length < 2)
-        {
-            this.actions.push(new Action({type : "move", goal : pos}));
-            this.actions.push(new Action({type : "cast", goal : creatures.red.raging_goblin}));
-            this.actions.push(new Action({type : "move", goal : this.spawnPos}));
-            return
+            if ( proxyTest )
+            {
+                found = obj;
+                return true;
+            }
         }
-        
-        if ( this.player.mana >= 3)
-        {
-            this.actions.push(new Action({type : "cast", goal : sorcery.red.reckless_charge}));
-            return
-        }
+    });
+
+    return found;
 }
 
+AI.prototype.processJob = function ()
+{
+    if (this.action.goal)
+    {
+        if (this.action.type == "move" && this.action.goal)
+        {
+            this.movePlayer();
+        }
 
-AI.prototype.doAction = function (action) {
-    if (action.type == "move") {
-        this.moveTo(action);
+        if (this.action.type == "cast")
+        {
+            this.player.doAction(this.action.goal, this.action);
+            this.action.type = "casting"
+        }
     }
-
-    if (action.type == "cast") {
-        this.player.doAction(action.goal, action);
-        action.type == "casting"
-    }
-
-
 }
 
-AI.prototype.moveTo = function (action) {
-    var pos = action.goal;
+AI.prototype.movePlayer = function () {
+    var pos = this.action.goal;
 
-    if (this.player.pos.dist(pos) < 5) {
-        action.done = true;
+    if (this.player.pos.dist(pos) < 5)
+    {
+        this.action.done = true;
         this.player.status = "idle";
-    } else {
+    }
+    else
+    {
         this.player.status = "moving";
         var dir = (pos.subtract(this.player.pos)).normalize();
         this.player.pos.x += dir.x * (this.player.speed) * game_speed;
         this.player.pos.y += dir.y * (this.player.speed) * game_speed;
     }
 
-}
-
-function Action(action) {
-    this.done = false;
-    this.type = action.type;
-    this.goal = action.goal;
 }

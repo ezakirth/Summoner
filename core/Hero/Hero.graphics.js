@@ -9,8 +9,8 @@ Hero.prototype.setupText = function()
         name : game.add.text(0, 0, this.name, {boundsAlignH: "center", boundsAlignV: "center", fontSize: 17, fill: "#ffffff"}),
         dialog : game.add.text(0, 0, "", {boundsAlignH: "center", boundsAlignV: "center", fontSize: 17, fill: "#ffffff"}),
         action : game.add.text(0, 0, this.status, {boundsAlignH: "center", boundsAlignV: "center", fontSize: 10, fill: "#ffffff"}),
-        manaText : game.add.text(0, 0, this.manaText, {boundsAlignH: "center", boundsAlignV: "center", fontSize: 17, fill: "#00ff00"}),
-        lifeText : game.add.text(0, 0, this.life + " " + this.lifeText, {boundsAlignH: "center", boundsAlignV: "center", fontSize: 8, fill: "#00ffff"}),
+        lifeText : game.add.text(0, 0, this.life + " " + this.lifeText, {boundsAlignH: "center", boundsAlignV: "center", fontSize: 17, fill: "#00ff00"}),
+        manaText : game.add.text(0, 0, this.manaText, {boundsAlignH: "center", boundsAlignV: "center", fontSize: 8, fill: "#00ffff"}),
     };
 
     Layers.sprites.add(this.text.name);
