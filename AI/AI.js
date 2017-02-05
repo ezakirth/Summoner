@@ -28,10 +28,10 @@ AI.prototype.process = function () {
 }
 
 AI.prototype.findJob = function () {
-    if (crystals.p2.crystalReady) {
+    if (this.player.crystal.ready) {
         this.actions.push(new Action({
             type: "move",
-            goal: crystals.p2.crystalPos
+            goal: this.player.crystal.pos
         }));
         this.actions.push(new Action({
             type: "move",
@@ -40,19 +40,13 @@ AI.prototype.findJob = function () {
         return
     }
 
-    if (this.player.mana >= 1 && this.player.summons.length < 1) {
-        //        this.actions.push(new Action({type : "move", goal : new vec2(Math.floor(WIDTH/2 + (WIDTH/2)*Math.random()), Math.floor(HEIGHT*Math.random()))}));
-        this.actions.push(new Action({
-            type: "cast",
-            goal: creatures.red.raging_goblin
-        }));
-        //        this.actions.push(new Action({type : "move", goal : this.spawnPos}));
-        return
-    }
-    /*
-        if ( this.player.mana >= 2 && this.player.summons.length < 2)
+    var offset = (this.player == p1) ? 0 : WIDTH / 2;
+    // if crystal is for player2, spawn it on the right side of the screen
+    var pos = new vec2(offset + Math.random() * WIDTH / 2, Math.random() * (HEIGHT - 200) + 200);
+
+    if ( this.player.mana >= 2 && this.player.summons.length < 2)
         {
-            this.actions.push(new Action({type : "move", goal : new vec2(Math.floor(WIDTH/2 + (WIDTH/2)*Math.random()), Math.floor(HEIGHT*Math.random()))}));
+            this.actions.push(new Action({type : "move", goal : pos}));
             this.actions.push(new Action({type : "cast", goal : creatures.red.goblin_hero}));
             this.actions.push(new Action({type : "move", goal : this.spawnPos}));
             return
@@ -60,7 +54,7 @@ AI.prototype.findJob = function () {
 
         if ( this.player.mana >= 1 && this.player.summons.length < 2)
         {
-            this.actions.push(new Action({type : "move", goal : new vec2(Math.floor(WIDTH/2 + (WIDTH/2)*Math.random()), Math.floor(HEIGHT*Math.random()))}));
+            this.actions.push(new Action({type : "move", goal : pos}));
             this.actions.push(new Action({type : "cast", goal : creatures.red.raging_goblin}));
             this.actions.push(new Action({type : "move", goal : this.spawnPos}));
             return
@@ -70,8 +64,7 @@ AI.prototype.findJob = function () {
         {
             this.actions.push(new Action({type : "cast", goal : sorcery.red.reckless_charge}));
             return
-        }*/
-
+        }
 }
 
 

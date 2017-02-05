@@ -137,4 +137,35 @@ Minion.prototype.render = function () {
         this.sprites.model.animations.play(this.status, 10, true);
     }
 
-}
+};
+
+
+/**
+ * @desc Shows the minion model
+ * @param void
+ * @return void
+ */
+Minion.prototype.show = function ()
+{
+    this.text.name.alpha = 1;
+    this.text.action.alpha = 1;
+    this.text.powerText.alpha = 1;
+    this.text.lifeText.alpha = 1;
+    this.sprites.model.visible = true;
+    this.sprites.shadow.visible = true;
+};
+
+/**
+ * @desc Hides the minion model
+ * @param void
+ * @return void
+ */
+Minion.prototype.hide = function ()
+{
+    this.text.name.alpha = 0;
+    this.text.action.alpha = 0;
+    this.text.powerText.alpha = 0;
+    this.text.lifeText.alpha = 0;
+    this.sprites.model.visible = false;
+    this.sprites.shadow.visible = false;
+};

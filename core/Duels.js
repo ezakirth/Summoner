@@ -16,10 +16,13 @@ Duels.prototype.run = function () {
 
     var done_duel;
     this.list.forEach((duel, index) => {
-        if (duel.done) {
-            this.list[index] = null;
-        } else {
-            duel.run();
+        if (duel)
+        {
+            if (duel.done) {
+                this.list[index] = null;
+            } else {
+                duel.run();
+            }
         }
     });
 }

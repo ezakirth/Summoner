@@ -174,6 +174,7 @@ Minion.prototype.checkEnemy = function () {
     });
 }
 
+
 Minion.prototype.process = function () {
     if (this.activeTimer() == "spawn" || this.activeTimer() == "unsummon") {
         this.status = "idle";
@@ -198,12 +199,7 @@ Minion.prototype.process = function () {
                 this.sprites.spell.animations.play('poof', 10, false);
 
                 // remove invulnerability
-                this.text.name.alpha = 1;
-                this.text.action.alpha = 1;
-                this.text.powerText.alpha = 1;
-                this.text.lifeText.alpha = 1;
-                this.sprites.model.visible = true;
-                this.sprites.shadow.visible = true;
+                this.show();
             }
 
             if (timer.id == "unsummon") {
@@ -214,12 +210,8 @@ Minion.prototype.process = function () {
                 this.respawn();
 
                 this.timers.push(this.spawnTimer);
-                this.text.name.alpha = 0;
-                this.text.action.alpha = 0;
-                this.text.powerText.alpha = 0;
-                this.text.lifeText.alpha = 0;
-                this.sprites.model.visible = false;
-                this.sprites.shadow.visible = false;
+
+                this.hide();
             }
 
             if (timer.id == "remove") {
@@ -227,13 +219,7 @@ Minion.prototype.process = function () {
             }
 
             if (timer.id == "death") {
-                this.text.name.alpha = 0;
-                this.text.action.alpha = 0;
-                this.text.powerText.alpha = 0;
-                this.text.lifeText.alpha = 0;
-                this.sprites.model.visible = false;
-                this.sprites.shadow.visible = false;
-
+                this.hide()
 
                 this.sprites.spell.x = this.pos.x;
                 this.sprites.spell.y = this.pos.y;

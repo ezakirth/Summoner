@@ -91,12 +91,11 @@ function create() {
     crystals = new Crystals();
     duels = new Duels();
 
-    p2.mana = 3;
-    p2.crystal.count = 3;
-    p2.doAction(creatures.red.raging_goblin);
+   // p2.doAction(creatures.red.raging_goblin);
 
-    ai = new AI(p2);
-    ai.active = false;
+    ai = new AI(p1);
+    ai2 = new AI(p2);
+    //ai.active = false;
 
 
 
@@ -111,6 +110,7 @@ function create() {
 
 function update() {
 	ai.process();
+	ai2.process();
 
 	var entities = p1.all();
 	entities.forEach((entity) => {

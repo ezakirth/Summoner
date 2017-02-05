@@ -29,7 +29,7 @@ function Hero(ent, showGui) {
     this.enchantments = Array();
     this.auras = Array();
 
-    this.pos = new vec2();
+    this.pos = new vec2(0,0);
     this.opponent = null;
     this.summons = Array();
     this.castSpell = null;

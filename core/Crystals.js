@@ -96,11 +96,11 @@ Crystals.prototype.processTimers = function () {
                 if (timer.id == "crystal")
                 {
                     player.crystal.ready = true;
-
-                    // if crystal is for player2, spawn it on the right side of the screen
                     var offset = (player == p1) ? 0 : WIDTH / 2;
+                    // if crystal is for player2, spawn it on the right side of the screen
+                    player.crystal.pos = new vec2(offset + Math.random() * WIDTH / 2, Math.random() * (HEIGHT - 200) + 200);
 
-                    this.addCrystal(new vec2(offset + Math.random() * WIDTH / 2, Math.random() * (HEIGHT - 200) + 200), player);
+                    this.addCrystal(player.crystal.pos, player);
                 }
                 // remove used up timer
                 player.crystal.timer.splice(0, 1);
@@ -126,7 +126,7 @@ Crystals.prototype.processCrystals = function () {
                 if (crystal.pos.dist(player.pos) < 32)
                 {
                     player.mana += crystal.value;
-                    player.crystal.count = crystal.capIncrease;
+                    player.crystal.count += crystal.capIncrease;
 
                     // if the crystal wasn't summoned by a player
                     if (crystal.type == "crystal" && crystal.owner)
