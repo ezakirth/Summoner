@@ -9,7 +9,7 @@ function Crystals() {
 
 
 /**
- * @desc Generates a crystal sprite
+ * @desc Generates a mana crystal of shard
  * @param string:type, vec2:pos, Hero:owner
  * @return object
  */
@@ -21,6 +21,20 @@ Crystals.prototype.generateCrystal = function (type, pos, owner) {
     crystal.value = (type == "crystal") ? 1 : .5;;
     crystal.capIncrease = (type == "crystal") ? 1 : 0;
 
+    this.setupSprite(crystal, pos);
+
+    Layers.sprites.add(crystal.model);
+    Layers.shadows.add(crystal.shadow);
+
+    return crystal;
+};
+
+/**
+ * @desc Generates a crystal sprite
+ * @param object:crystal, vec2:pos
+ * @return void
+ */
+Crystals.prototype.setupSprite = function (crystal, pos) {
     crystal.model = game.add.image(pos.x, pos.y, 'crystal_blue');
     crystal.model.anchor.setTo(.5, 1);
     crystal.model.animations.add('rotate');
@@ -30,12 +44,7 @@ Crystals.prototype.generateCrystal = function (type, pos, owner) {
     crystal.shadow = game.add.image(pos.x, pos.y, 'shadow');
     crystal.shadow.anchor.setTo(.5, .5);
     crystal.shadow.scale.setTo(crystal.value, crystal.value);
-
-    Layers.sprites.add(crystal.model);
-    Layers.shadows.add(crystal.shadow);
-
-    return crystal;
-};
+}
 
 /**
  * @desc Generates a crystal
