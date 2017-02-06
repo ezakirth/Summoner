@@ -11,7 +11,7 @@ Duels.prototype.add = function (a, b) {
 
 Duels.prototype.run = function () {
     if (this.list[0] == null) {
-        this.list.splice(0, 1);
+        this.list.shift();
     }
 
     var done_duel;

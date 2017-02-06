@@ -55,3 +55,7 @@ vec2.prototype.length = function () {
 vec2.prototype.dist = function (v) {
     return Math.sqrt((this.x - v.x) * (this.x - v.x) + (this.y - v.y) * (this.y - v.y));
 };
+
+vec2.prototype.equals = function (v) {
+    return (this.x == v.x) && (this.y == v.y);
+};

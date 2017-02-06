@@ -1,23 +1,28 @@
 /**
  * @desc Makes the player attack
  * @param void
- * @return void
+ * @return bool
  */
-Hero.prototype.attack = function ()
+Hero.prototype.attack = function (AIaction)
 {
+    // Checks if cast is from human or AI
+    this.AIaction = AIaction || this.AIaction;
+
     // attack only if no other actions are happening
     if (this.activeTimer() === false)
     {
         this.status = "attack";
         this.timers.push(this.attackTimer);
+        return true;
     }
+    return false;
 }
 
 
 /**
  * @desc Initiates a spellcast for the player (either a creature, a sorcery or an enchantment)
  * @param creature/enchantment/sorcery:action, AIaction:AIaction
- * @return void
+ * @return bool
  */
 Hero.prototype.doAction = function (action, AIaction)
 {
@@ -36,8 +41,10 @@ Hero.prototype.doAction = function (action, AIaction)
             this.timers.push(new Timer(action.castTime, action.type));
             this.mana -= action.cost;
             this.castSpell = action;
+            return true;
         }
     }
+    return false;
 }
 
 
@@ -158,5 +165,5 @@ Hero.prototype.resolveSpell = function (spell) {
  * @return void
  */
 Hero.prototype.stopcasting = function () {
-    this.timers.splice(0, 1);
+    this.timers.shift();
 }

@@ -85,7 +85,7 @@ Crystals.prototype.addShards = function (pos, value) {
 Crystals.prototype.processTimers = function () {
     // removed crystals that have been picked up
     if (this.crystals[0] == null) {
-        this.crystals.splice(0, 1);
+        this.crystals.shift();
     }
 
     players.forEach((player) =>
@@ -112,7 +112,7 @@ Crystals.prototype.processTimers = function () {
                     this.addCrystal(player.crystal.pos, player);
                 }
                 // remove used up timer
-                player.crystal.timer.splice(0, 1);
+                player.crystal.timer.shift();
             }
         }
     });
@@ -132,7 +132,10 @@ Crystals.prototype.processCrystals = function () {
             if (crystal)
             {
                 // if a player collides with the crystal, pick it up
-                if (crystal.pos.dist(player.pos) < 32)
+                var speed_val = game_speed;
+                if (speed_val < 5)
+                    speed_val = 5;
+                if (crystal.pos.dist(player.pos) < 64 * (speed_val/5))
                 {
                     player.mana += crystal.value;
                     player.crystal.count += crystal.capIncrease;
@@ -148,7 +151,8 @@ Crystals.prototype.processCrystals = function () {
                         crystal.owner.crystal.ready = false;
 
                         // start new crystal timer
-                        crystal.owner.crystal.timer.push(new Timer(crystal.owner.crystal.delay, "crystal"));
+                        if (crystal.owner.crystal.count < 10)
+                            crystal.owner.crystal.timer.push(new Timer(crystal.owner.crystal.delay, "crystal"));
                     }
                     
                     // destroy phaser objects

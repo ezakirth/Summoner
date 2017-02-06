@@ -113,7 +113,7 @@ Duel.prototype.run = function () {
                 }
 
                 if (this.timers) {
-                    this.timers.splice(0, 1);
+                    this.timers.shift();
                 }
             }
         }
@@ -133,7 +133,7 @@ Duel.prototype.placeMinions = function () {
     this.b.pos.x += game_speed * Math.cos(dir) / 1.5;
     this.b.pos.y += game_speed * Math.sin(dir) / 1.5;
 
-    if (this.destA.dist(this.a.pos) < 2 && this.destB.dist(this.b.pos) < 2) {
+    if (this.destA.dist(this.a.pos) < 2*game_speed && this.destB.dist(this.b.pos) < 2*game_speed) {
         this.ready = true;
     }
 }

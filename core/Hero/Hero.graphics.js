@@ -33,7 +33,7 @@ Hero.prototype.setupSprite = function()
     this.sprites.model.animations.add('idle', [0, 1, 2, 3, 4, 5, 6, 7]);
     this.sprites.model.animations.add('moving', [12, 13, 14, 15, 16, 17, 18, 19]);
     this.sprites.model.animations.add('death', [24, 25, 26, 27, 28, 29, 30, 31]);
-    this.sprites.model.animations.add('attack', [36, 38, 39, 40, 43, 46]);
+    this.sprites.model.animations.add('attack', [36, 38, 39, 40, 43]);
     //		this.sprites.model.animations.add('attack', [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47]);
     this.sprites.model.anchor.setTo(.5, 1);
 
@@ -93,4 +93,15 @@ Hero.prototype.render = function ()
     drawText(this.text.action, action, this.pos.x - 80, this.pos.y, 160, 160);
     drawText(this.text.lifeText, this.life + " " + this.lifeText, this.pos.x - 80, this.pos.y + 12, 160, 160);
     drawText(this.text.manaText, this.manaText, this.pos.x - 80, this.pos.y + 37, 160, 160);
+
+
+
+	if (this.status == "attack") {
+		this.sprites.model.animations.play('attack', 5, false);
+	} else {
+		this.sprites.model.animations.play(this.status, 10, true);
+	}
+    
+	this.sprites.model.x = this.pos.x;
+	this.sprites.model.y = this.pos.y;    
 };

@@ -35,7 +35,7 @@ function Hero(ent, showGui) {
     this.castSpell = null;
     this.timers = Array();
 
-    this.attackTimer = new Timer(500, "attack");
+    this.attackTimer = new Timer(1000, "attack");
 
     this.setupText();
     this.setupSprite();
@@ -61,7 +61,7 @@ Hero.prototype.process = function () {
 Hero.prototype.processCleanup = function ()
 {
     if (this.auras[0] == null) {
-        this.auras.splice(0, 1);
+        this.auras.shift();
     }
 
     var dead_minion = null;
@@ -163,7 +163,16 @@ Hero.prototype.processTimers = function () {
 
 
             if (timer.id == "attack") {
-                var closest = this.closestTarget();
+                var closest = null;
+                if (this.AIaction && this.AIaction.done == false) {
+                    this.AIaction.done = true;
+                    closest = this.closestEnemy();
+                }
+                else
+                {
+                    closest = this.closestTarget();
+                }
+                
                 var target = closest[0];
                 if (target) {
                     var dist = this.pos.dist(target.pos);
@@ -179,7 +188,7 @@ Hero.prototype.processTimers = function () {
 
             }
 
-            this.timers.splice(0, 1);
+            this.timers.shift();
         }
     }
 };

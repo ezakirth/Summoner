@@ -254,7 +254,7 @@ Minion.prototype.process = function () {
 
             }
 
-            this.timers.splice(0, 1);
+            this.timers.shift();
         }
     } else {
         if (!this.activeTimer()) {
@@ -295,6 +295,10 @@ Minion.prototype.move = function () {
     if (!this.inDuel && this.pos.dist(this.controller.opponent.pos) < 64) {
         this.timers.push(this.attackTimer);
         this.status = "attack";
+        if ((ai.active && ai.player == this.controller.opponent) || (ai2.active && ai2.player == this.controller.opponent))
+        {
+            this.controller.opponent.attack();
+        }
     }
 }
 

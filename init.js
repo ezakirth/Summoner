@@ -1,7 +1,8 @@
+var game_speed = 1;
+
 var game = null;
 var Graphics = null;
 var test = null;
-var game_speed = 1;
 var lastElapsedTime = 0;
 
 WIDTH = 960;
@@ -74,7 +75,7 @@ function create() {
 
     // hero;
     p1 = new Hero(heroes.basic.green, true);
-    p2 = new Hero(heroes.basic.blue);
+    p2 = new Hero(heroes.basic.red);
     p1.opponent = p2;
     p2.opponent = p1;
     p1.pos = new vec2(200, 300);
@@ -102,7 +103,7 @@ function create() {
     ai = new AI(p1);
     ai2 = new AI(p2);
   //  ai.active = false;
-   // ai2.active = false;
+  //  ai2.active = false;
 
 
 
@@ -155,10 +156,14 @@ function update() {
 
 	inputHandler();
 
-	game_speed = 1; //(game.time.elapsedMS*144)/1000;
+//	game_speed = (game.time.elapsedMS*144)/1000;
+
+	if (game_speed > 10)
+		game_speed = 10;
+
 	Layers.sprites.sort('y', Phaser.Group.SORT_ASCENDING);
 
-	ElapsedTime = game.time.time - game.time._started;
+	ElapsedTime = (game.time.time - game.time._started)*game_speed;
 
 	DeltaTime = ElapsedTime - lastElapsedTime;
 	lastElapsedTime = ElapsedTime;
@@ -216,18 +221,6 @@ function inputHandler() {
 	}
 
 
-	if (p1.status == "attack") {
-		p1.sprites.model.animations.play('attack', 12, false);
-	} else {
-		p1.sprites.model.animations.play(p1.status, 10, true);
-	}
-
-	p1.sprites.model.x = p1.pos.x;
-	p1.sprites.model.y = p1.pos.y;
-
-	p2.sprites.model.animations.play(p2.status, 10, true);
-	p2.sprites.model.x = p2.pos.x;
-	p2.sprites.model.y = p2.pos.y;
 
 	if (game.input.mousePointer.isDown) {
 		if (Touch.state == ENDED)
