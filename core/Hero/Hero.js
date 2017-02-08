@@ -115,7 +115,7 @@ Hero.prototype.processManaRegen = function()
     // Update mana (only regen when not shielding)
     if (this.shielding)
     {
-        this.mana -= 3 * (DeltaTime / 1000);
+        this.mana -= (DeltaTime / 1000);
     }
     else
     {

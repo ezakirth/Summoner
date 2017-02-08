@@ -31,6 +31,14 @@ function inputHandler() {
 		p1.attack();
 	}
 
+	if (game.input.keyboard.isDown(Phaser.Keyboard.E) && p1.mana > .5) {
+		p1.shielding = true;
+	}
+    else
+    {
+        p1.shielding = false;
+    }
+
 	if (game.input.keyboard.isDown(Phaser.Keyboard.ONE) && !buttonsPressed.creatures) {
 		p1.gui.touched({x: buttons.creatures.pos.x, y: buttons.creatures.pos.y, state: ENDED});
 	}
@@ -43,7 +51,7 @@ function inputHandler() {
 		p1.gui.touched({x: buttons.enchantments.pos.x, y: buttons.enchantments.pos.y, state: ENDED});
 	}
 
-	if (game.input.keyboard.isDown(Phaser.Keyboard.FOUR) && !buttonsPressed.home) {
+	if ((game.input.keyboard.isDown(Phaser.Keyboard.FOUR) || game.input.keyboard.isDown(Phaser.Keyboard.ESC))) {
 		p1.gui.touched({x: buttons.home.pos.x, y: buttons.home.pos.y, state: ENDED});
 	}
 
@@ -52,11 +60,10 @@ function inputHandler() {
 	}
 
 
-	buttonsPressed.creatures = game.input.keyboard.downDuration(Phaser.Keyboard.ONE, 100);
-	buttonsPressed.sorcery = game.input.keyboard.downDuration(Phaser.Keyboard.TWO, 100);
-	buttonsPressed.enchantments = game.input.keyboard.downDuration(Phaser.Keyboard.THREE, 100);
-	buttonsPressed.home = game.input.keyboard.downDuration(Phaser.Keyboard.FOUR, 100);
-	buttonsPressed.next = game.input.keyboard.downDuration(Phaser.Keyboard.QUOTES, 100);
+	buttonsPressed.creatures = game.input.keyboard.downDuration(Phaser.Keyboard.ONE, 150);
+	buttonsPressed.sorcery = game.input.keyboard.downDuration(Phaser.Keyboard.TWO, 150);
+	buttonsPressed.enchantments = game.input.keyboard.downDuration(Phaser.Keyboard.THREE, 150);
+	buttonsPressed.next = game.input.keyboard.downDuration(Phaser.Keyboard.QUOTES, 150);
 
 
 	if (game.input.mousePointer.isDown) {
