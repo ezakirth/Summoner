@@ -9,7 +9,7 @@ sorcery.blue = {
                 power: 0,
                 cost: 1,
                 castTime: 1000,
-                abilities: Array("unsummon"),
+                abilities: new Array("unsummon"),
                 // button;
                 icon: "💨",
         },
@@ -24,7 +24,7 @@ sorcery.blue = {
                 power: 0,
                 cost: 3,
                 castTime: 1000,
-                abilities: Array("freeze"),
+                abilities: new Array("freeze"),
                 // button;
                 icon: "❄️",
         },
@@ -39,7 +39,7 @@ sorcery.blue = {
                 power: 0,
                 cost: 1,
                 castTime: 1000,
-                abilities: Array("spellproof"),
+                abilities: new Array("spellproof"),
                 // button;
                 icon: "💨",
         },
@@ -54,7 +54,7 @@ sorcery.blue = {
                 power: 0,
                 cost: 2,
                 castTime: 1000,
-                abilities: Array("counterspell"),
+                abilities: new Array("counterspell"),
                 // button;
                 icon: "💨",
         },
@@ -69,7 +69,7 @@ sorcery.blue = {
                 power: 0,
                 cost: 4,
                 castTime: 2000,
-                abilities: Array("spelljack"),
+                abilities: new Array("spelljack"),
                 // button;
                 icon: "💨",
         },
@@ -84,7 +84,7 @@ sorcery.blue = {
                 power: 0,
                 cost: 5,
                 castTime: 2000,
-                abilities: Array("manashort"),
+                abilities: new Array("manashort"),
                 // button;
                 icon: "💨",
         },
@@ -99,7 +99,7 @@ sorcery.blue = {
                 power: 0,
                 cost: 5,
                 castTime: 2000,
-                abilities: Array("clone"),
+                abilities: new Array("clone"),
                 // button;
                 icon: "💨",
         }

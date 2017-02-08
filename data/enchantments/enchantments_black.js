@@ -9,7 +9,7 @@ enchantments.black = {
                 life: 0,
                 cost: 4,
                 castTime: 3000,
-                abilities: Array("liability"),
+                abilities: new Array("liability"),
                 // button;
                 icon: "✳️",
         },
@@ -24,7 +24,7 @@ enchantments.black = {
                 life: 0,
                 cost: 5,
                 castTime: 3000,
-                abilities: Array("no_mercy"),
+                abilities: new Array("no_mercy"),
                 // button;
                 icon: "✳️",
         },

@@ -1,10 +1,10 @@
 decks.blue = {
-	basic: Array(
+	basic: new Array(
 		sorcery.blue.unsummon,
 		sorcery.blue.deluge,
 		creatures.blue.winged_drake,
 		creatures.blue.horned_turtle
 	),
-	epic: Array(),
-	legendary: Array()
+	epic: new Array(),
+	legendary: new Array()
 };

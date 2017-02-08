@@ -1,7 +1,7 @@
 function AI(player) {
     this.player = player;
     this.spawnPos = new vec2(Math.floor(player.pos.x), Math.floor(player.pos.y));
-    this.jobs = Array();
+    this.jobs = [];
 
     this.active = true;
 }
@@ -29,7 +29,7 @@ AI.prototype.findJob = function () {
             var closestEnemy = this.player.closestEnemy()[0];
             if (this.player.pos.dist(closestEnemy.pos) < 128)
             {
-                this.jobs = Array(new Job({
+                this.jobs = new Array(new Job({
                     priority: 4,
                     type: "attack",
                     goal: "",
@@ -44,7 +44,7 @@ AI.prototype.findJob = function () {
         {
             if (this.player.crystal.ready)
             {
-                this.jobs = Array(new Job({
+                this.jobs = new Array(new Job({
                     priority: 3,
                     type: "move",
                     goal: this.player.crystal.pos,
@@ -62,7 +62,7 @@ AI.prototype.findJob = function () {
                 var spell = sorcery.green.giant_growth;
                 if (this.player.mana >= creature.cost && this.player.summons.length < 1)
                 {
-                    this.jobs = Array(new Job({
+                    this.jobs = new Array(new Job({
                         priority: 2,
                         type: "cast",
                         goal: creature,
@@ -73,7 +73,7 @@ AI.prototype.findJob = function () {
                 else
                     if (this.player.mana >= spell.cost && this.player.summons.length == 1)
                     {
-                        this.jobs = Array(new Job({
+                        this.jobs = new Array(new Job({
                             priority: 2,
                             type: "cast",
                             goal: spell,
@@ -81,6 +81,7 @@ AI.prototype.findJob = function () {
                         }));
                         return true;
                     }
+
             }
 
             if (this.player.name == "Warrior")
@@ -89,7 +90,7 @@ AI.prototype.findJob = function () {
                 var spell = sorcery.red.engulfing_flames;
                 if ( this.player.mana >= creature.cost && this.player.summons.length < 4)
                 {
-                    this.jobs = Array(new Job({
+                    this.jobs = new Array(new Job({
                         priority: 2,
                         type: "cast",
                         goal: creature,
@@ -100,7 +101,7 @@ AI.prototype.findJob = function () {
                 else
                     if (this.player.mana >= spell.cost)
                     {
-                        this.jobs = Array(new Job({
+                        this.jobs = new Array(new Job({
                             priority: 2,
                             type: "cast",
                             goal: spell,
@@ -115,8 +116,8 @@ AI.prototype.findJob = function () {
         if (currentJob.priority < 2)
         {
 
-            var creatures = Array();
-            var spells = Array();
+            var creatures = new Array();
+            var spells = new Array();
 
             this.player.deck.some((spell) =>
             {
@@ -138,7 +139,7 @@ AI.prototype.findJob = function () {
 
             if ( this.player.mana >= cast.cost && this.player.summons.length < 5)
             {
-                this.jobs = Array(new Job({
+                this.jobs = new Array(new Job({
                     priority: 2,
                     type: "cast",
                     goal: cast,
@@ -157,7 +158,7 @@ AI.prototype.findJob = function () {
 
                 if (foundCrystal)
                 {
-                    this.jobs = Array(new Job({
+                    this.jobs = new Array(new Job({
                         priority: 1,
                         type: "move",
                         goal: foundCrystal.pos,
@@ -171,7 +172,7 @@ AI.prototype.findJob = function () {
 
     if (this.jobs.length == 0)
     {
-        this.jobs = Array(new Job({
+        this.jobs = new Array(new Job({
             priority: 0,
             type: "move",
             goal: this.spawnPos,

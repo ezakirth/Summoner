@@ -4,7 +4,7 @@
  * @return void
  */
 function Crystals() {
-    this.crystals = Array();
+    this.crystals = new Array();
 }
 
 
@@ -63,7 +63,7 @@ Crystals.prototype.addCrystal = function (pos, owner) {
  * @return void
  */
 Crystals.prototype.addShards = function (pos, value) {
-    var nb_shards = Math.ceil(value);
+    var nb_shards = value * 2;
     var shard, px, py;
 
     for (var i = 0; i < nb_shards; i++) {

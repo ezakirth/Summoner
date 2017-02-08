@@ -9,7 +9,7 @@ sorcery.green = {
                 power: 2,
                 cost: 2,
                 castTime: 1000,
-                abilities: Array(),
+                abilities: new Array(),
                 // button;
                 icon: "🍀",
         },
@@ -24,7 +24,7 @@ sorcery.green = {
                 power: 0,
                 cost: 1,
                 castTime: 1000,
-                abilities: Array("trample", "regeneration", "forceattack"),
+                abilities: new Array("trample", "regeneration", "forceattack"),
                 // button;
                 icon: "🍃",
         },
@@ -39,7 +39,7 @@ sorcery.green = {
                 power: 0,
                 cost: 3,
                 castTime: 1000,
-                abilities: Array("makecrystal"),
+                abilities: new Array("makecrystal"),
                 // button;
                 icon: "🍃",
         },
@@ -54,7 +54,7 @@ sorcery.green = {
                 power: 0,
                 cost: 4,
                 castTime: 1000,
-                abilities: Array("tranquility"),
+                abilities: new Array("tranquility"),
                 // button;
                 icon: "🍃",
         },
@@ -69,7 +69,7 @@ sorcery.green = {
                 power: 3,
                 cost: 6,
                 castTime: 1000,
-                abilities: Array("trample", "forceattack"),
+                abilities: new Array("trample", "forceattack"),
                 // button;
                 icon: "🍃",
         }

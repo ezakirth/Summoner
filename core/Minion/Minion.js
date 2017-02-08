@@ -1,6 +1,7 @@
 function Minion(ent, owner) {
 
-
+    this.owner = owner;
+    this.controller = owner;
     this.life = ent.life;
     this.power = ent.power;
     this.speed = ent.speed;
@@ -12,12 +13,33 @@ function Minion(ent, owner) {
     this.abilities = ent.abilities;
     this.icon = ent.icon;
     this.buffs = "";
-    this.tempAbilities = Array()
+    this.tempAbilities = new Array()
     this.baseLife = this.life;
     this.basePower = this.power;
 
+    // fallback mechanic
+    this.inFallbackPosition = false
+    this.fallbackLocation = null;
+
+
+
     this.checkAbilities();
     this.updateStats();
+
+
+    if (this.fallback)
+    {
+        this.owner.fallbackLocations.some((location) =>
+        {
+            if (location.val == 1)
+            {
+                location.val = 0;
+                this.fallbackLocation = location;
+                return true;
+            }
+        });
+    }
+
 
     this.offset = 0;
 
@@ -25,8 +47,7 @@ function Minion(ent, owner) {
         this.offset = 80;
     }
 
-    this.owner = owner;
-    this.controller = owner;
+
     this.spawnPos = new vec2(owner.pos.x + 64 * owner.side, owner.pos.y);
     this.pos = new vec2(this.spawnPos.x, this.spawnPos.y);
 
@@ -37,11 +58,13 @@ function Minion(ent, owner) {
     this.status = "idle";
 
 
-    this.timers = Array();
+    this.timers = new Array();
     this.attackTimer = new Timer(500, "attack");
     this.deathTimer = new Timer(1000, "death");
     this.removeTimer = new Timer(500, "remove");
     this.spawnTimer = new Timer(1000, "spawn");
+    this.manafont_1Timer = new Timer(5000, "manafont_1");    
+    this.manafont_xTimer = new Timer(5000, "manafont_x");    
     this.unsummonTimer = new Timer(500, "unsummon");
 
     this.new = true;
@@ -72,6 +95,9 @@ Minion.prototype.checkAbilities = function () {
     this.blocking = false;
     this.spellproof = false;
     this.spellburn = false;
+    this.manafont_1 = false;
+    this.manafont_x = false;
+    this.fallback = false;
 
     this.abilities.forEach((ability) => {
         this[ability] = true;
@@ -91,8 +117,17 @@ Minion.prototype.checkAbilities = function () {
     if (this.spellproof) buffs = buffs + "✳️";
     if (this.spellburn) buffs = buffs + "💥";
     if (this.regeneration && !this.noregeneration) buffs = buffs + "♻️";
+    if (this.manafont_1 || this.manafont_x) buffs = buffs + "💎";
+    if (this.fallback) buffs = buffs + "🔙";
 
     this.buffs = buffs;
+
+    if (this.fallback && this.forceattack)
+    {
+        this.timers.forEach((timer) => { timer.started = false});
+        this.timers = new Array();
+        this.inFallbackPosition = true;
+    }
 }
 
 Minion.prototype.updateStats = function () {
@@ -104,8 +139,9 @@ Minion.prototype.respawn = function () {
     this.inDuel = false;
     this.duel = null;
     this.dying = false;
+    this.inFallbackPosition = false;
 
-    this.tempAbilities = Array();
+    this.tempAbilities = new Array();
 
     this.controller = this.owner;
 
@@ -162,7 +198,10 @@ Minion.prototype.process = function () {
         this.status = "idle";
     }
     if (this.life <= 0 && !this.dying) {
-        this.timers = Array();
+        if (this.fallbackLocation)
+            this.fallbackLocation.val = 1;
+        this.timers.forEach((timer) => { timer.started = false});
+        this.timers = new Array();
         this.timers.push(this.deathTimer);
         this.dying = true;
         this.status = "death";
@@ -170,11 +209,22 @@ Minion.prototype.process = function () {
 
     var timer = this.timers[0];
     if (timer) {
-
         if (!timer.started) {
             timer.reset();
         }
         if (timer.isDone()) {
+            if (timer.id == "manafont_1")
+            {
+                crystals.addShards(new vec2(this.pos.x + 100*this.owner.side, this.pos.y) , .5);
+                this.timers.push(this.manafont_1Timer);
+            }
+
+            if (timer.id == "manafont_x")
+            {
+                crystals.addShards(new vec2(this.pos.x + 100*this.owner.side, this.pos.y) , this.owner.summons.length * .5);
+                this.timers.push(this.manafont_xTimer);
+            }            
+
             if (timer.id == "spawn") {
                 this.sprites.spell.x = this.pos.x;
                 this.sprites.spell.y = this.pos.y;
@@ -253,7 +303,6 @@ Minion.prototype.process = function () {
                 }
 
             }
-
             this.timers.shift();
         }
     } else {
@@ -286,10 +335,25 @@ Minion.prototype.move = function () {
     if (this.haste) {
         haste = 1;
     }
-    if (!this.blocking || this.forceattack) {
+    if (!(this.fallback || this.blocking) || this.forceattack) {
         var dir = this.controller.opponent.pos.subtract(this.pos).normalize();
         this.pos.x += dir.x * (this.speed + haste) * game_speed;
         this.pos.y += dir.y * (this.speed + haste) * game_speed;
+    }
+
+    if (this.fallback && !this.inFallbackPosition)
+    {
+        var dir = this.fallbackLocation.subtract(this.pos).normalize();
+        this.pos.x += dir.x * (this.speed + haste) * game_speed;
+        this.pos.y += dir.y * (this.speed + haste) * game_speed;
+
+        if (this.fallbackLocation.dist(this.pos) < 10 * game_speed)
+        {
+            this.inFallbackPosition = true;
+            if (this.manafont_1) this.timers.push(this.manafont_1Timer);
+            if (this.manafont_x) this.timers.push(this.manafont_xTimer);
+            
+        }
     }
 
     if (!this.inDuel && this.pos.dist(this.controller.opponent.pos) < 64) {

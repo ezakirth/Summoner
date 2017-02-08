@@ -20,9 +20,9 @@ Hero.prototype.closestFriendly = function ()
         }
     });
     if (found)
-        return Array(minions[closest]);
+        return new Array(minions[closest]);
     else
-        return Array();
+        return new Array();
 }
 
 /**
@@ -36,7 +36,7 @@ Hero.prototype.closestEnemy = function ()
     if (minion[0])
         return minion;
     else
-        return Array(this.opponent);
+        return new Array(this.opponent);
 }
 
 /**
@@ -50,7 +50,7 @@ Hero.prototype.closestTarget = function ()
     if (minion[0])
         return minion;
     else
-        return Array(this.opponent);
+        return new Array(this.opponent);
 }
 
 /**
@@ -75,9 +75,9 @@ Hero.prototype.closestEnemyMinion = function ()
         }
     });
     if (found)
-        return Array(minions[closest]);
+        return new Array(minions[closest]);
     else
-        return Array();
+        return new Array();
 }
 
 /**
@@ -99,9 +99,9 @@ Hero.prototype.closestMinion = function () {
         }
     });
     if (found)
-        return Array(minions[closest]);
+        return new Array(minions[closest]);
     else
-        return Array();
+        return new Array();
 }
 
 /**
@@ -109,10 +109,10 @@ Hero.prototype.closestMinion = function () {
  * @param void
  * @return Array of targets
  */
-Hero.prototype.allFriendlyMinions = function () {
-    var array = Array();
+Hero.prototype.allFriendlyMinions = function (all) {
+    var array = new Array();
     this.summons.forEach((minion) => {
-        if (!minion.dead) {
+        if (all || !(minion.dying || minion.dead)) {
             array.push(minion);
         }
     });
@@ -124,10 +124,10 @@ Hero.prototype.allFriendlyMinions = function () {
  * @param void
  * @return Array of targets
  */
-Hero.prototype.allEnemyMinions = function () {
-    var array = Array();
+Hero.prototype.allEnemyMinions = function (all) {
+    var array = new Array();
     this.opponent.summons.forEach((minion) => {
-        if (!minion.dead) {
+        if (all || !(minion.dying || minion.dead)) {
             array.push(minion);
         }
     });
@@ -139,10 +139,10 @@ Hero.prototype.allEnemyMinions = function () {
  * @param void
  * @return Array of targets
  */
-Hero.prototype.allMinions = function () {
-    var array = Array();
-    var enemies = this.allEnemyMinions();
-    var friendlies = this.allFriendlyMinions();
+Hero.prototype.allMinions = function (all) {
+    var array = new Array();
+    var enemies = this.allEnemyMinions(all);
+    var friendlies = this.allFriendlyMinions(all);
     enemies.forEach((minion) => {
         array.push(minion);
     });
@@ -157,8 +157,8 @@ Hero.prototype.allMinions = function () {
  * @param void
  * @return Array of targets
  */
-Hero.prototype.all = function () {
-    var array = this.allMinions();
+Hero.prototype.all = function (all) {
+    var array = this.allMinions(all);
     array.push(this);
     array.push(this.opponent);
     return array;
@@ -170,7 +170,7 @@ Hero.prototype.all = function () {
  * @return Array of targets
  */
 Hero.prototype.enemyHero = function () {
-    return Array(this.opponent);
+    return new Array(this.opponent);
 }
 
 /**
@@ -179,7 +179,7 @@ Hero.prototype.enemyHero = function () {
  * @return Array of targets
  */
 Hero.prototype.friendlyHero = function () {
-    return Array(this);
+    return new Array(this);
 }
 
 /**
@@ -188,5 +188,5 @@ Hero.prototype.friendlyHero = function () {
  * @return Array of targets
  */
 Hero.prototype.allHeroes = function () {
-    return Array(this, this.opponent);
+    return new Array(this, this.opponent);
 }

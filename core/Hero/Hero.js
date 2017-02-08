@@ -4,8 +4,19 @@ function Hero(ent, showGui) {
     this.crystal.pos = vec2(0, 0);
     this.crystal.delay = 3000;
     this.crystal.ready = false;
-    this.crystal.timer = Array();
+    this.crystal.timer = new Array();
     this.crystal.timer.push(new Timer(this.crystal.delay, "crystal"));
+
+
+
+    this.fallbackLocations = new Array(
+        new vec2(100, 200, 1),
+        new vec2(100, 300, 1),
+        new vec2(100, 400, 1),
+        new vec2(100, 500, 1),
+        new vec2(100, 600, 1)
+    );
+
 
     this.deck = ent.deck;
     if (showGui) this.gui = new GUI(this, this.deck);
@@ -26,14 +37,14 @@ function Hero(ent, showGui) {
     // 1 = left side, -1 = right side;
     this.side = 1;
 
-    this.enchantments = Array();
-    this.auras = Array();
+    this.enchantments = new Array();
+    this.auras = new Array();
 
     this.pos = new vec2(0,0);
     this.opponent = null;
-    this.summons = Array();
+    this.summons = new Array();
     this.castSpell = null;
-    this.timers = Array();
+    this.timers = new Array();
 
     this.attackTimer = new Timer(1000, "attack");
 

@@ -9,7 +9,7 @@ enchantments.red = {
         life: 0,
         cost: 4,
         castTime: 3000,
-        abilities: Array("haste"),
+        abilities: new Array("haste"),
         // button;
         icon: "✳️",
     },
@@ -24,7 +24,7 @@ enchantments.red = {
         life: 0,
         cost: 5,
         castTime: 3000,
-        abilities: Array("doubledamage"),
+        abilities: new Array("doubledamage"),
         // button;
         icon: "✳️",
     }

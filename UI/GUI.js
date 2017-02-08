@@ -4,24 +4,24 @@ function GUI(owner, deck) {
     this.currentPage = 1;
     this.currentFolderName = "home";
 
-    this.buttons = Array();
+    this.buttons = new Array();
     this.buttons.push(new Button(buttons.sword, owner));
     this.buttons.push(new Button(buttons.shield, owner));
 
-    this.home = Array();
+    this.home = new Array();
     this.home.push(new Button(buttons.creatures, owner));
     this.home.push(new Button(buttons.enchantments, owner));
     this.home.push(new Button(buttons.sorcery, owner));
 
-    this.creatures = Array();
+    this.creatures = new Array();
     this.creatures.push(new Button(buttons.home, owner));
     this.creatures.push(new Button(buttons.next, owner));
 
-    this.sorcery = Array();
+    this.sorcery = new Array();
     this.sorcery.push(new Button(buttons.home, owner));
     this.sorcery.push(new Button(buttons.next, owner));
 
-    this.enchantments = Array();
+    this.enchantments = new Array();
     this.enchantments.push(new Button(buttons.home, owner));
     this.enchantments.push(new Button(buttons.next, owner));
 
@@ -151,6 +151,9 @@ GUI.prototype.touched = function (touch) {
     });
 
     this.currentFolder.forEach((button) => {
-        button.touched(touch);
+        if (button.type == "button" || this.currentPage == button.page)
+        {
+            button.touched(touch);
+        }
     });
 }

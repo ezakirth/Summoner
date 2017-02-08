@@ -1,7 +1,8 @@
 // Simple Vector Class
-var vec2 = function (x, y) {
+var vec2 = function (x, y, val) {
     this.x = x;
     this.y = y;
+    this.val = val;
 }
 
 vec2.prototype.add = function (v) {

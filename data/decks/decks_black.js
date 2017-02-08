@@ -1,10 +1,10 @@
 decks.black = {
-	basic: Array(
+	basic: new Array(
 		sorcery.black.vicious_hunger,
 		sorcery.black.infest,
 		creatures.black.deaths_head_buzzard,
 		creatures.black.carnophage
 	),
-	epic: Array(),
-	legendary: Array()
+	epic: new Array(),
+	legendary: new Array()
 };

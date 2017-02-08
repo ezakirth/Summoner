@@ -1,5 +1,5 @@
 function Duels() {
-    this.list = Array();
+    this.list = new Array();
 }
 
 Duels.prototype.add = function (a, b) {

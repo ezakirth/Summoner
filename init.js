@@ -1,5 +1,6 @@
 var game_speed = 1;
 
+
 var game = null;
 var Graphics = null;
 var test = null;
@@ -9,6 +10,17 @@ WIDTH = 960;
 HEIGHT = 640;
 ElapsedTime = 0;
 DeltaTime = 0;
+
+
+var buttonsPressed = {
+	home: false,
+	next: false,
+	creatures: false,
+	sorcery: false,
+	enchantments: false
+};
+
+var nextButtonPressed = false;
 
 var Sprite = null;
 BEGAN = 1;
@@ -85,7 +97,7 @@ function create() {
     p2.sprites.model.scale.x = p2.side;
 
 
-    players = Array();
+    players = new Array();
     players.push(p1);
     players.push(p2);
 
@@ -102,8 +114,8 @@ function create() {
 
     ai = new AI(p1);
     ai2 = new AI(p2);
-  //  ai.active = false;
-  //  ai2.active = false;
+    ai.active = false;
+ //   ai2.active = false;
 
 
 
@@ -120,7 +132,7 @@ function update() {
 	ai.process();
 	ai2.process();
 
-	var entities = p1.all();
+	var entities = p1.all(true);
 	entities.forEach((entity) => {
 		entity.process();
 	});
@@ -173,90 +185,3 @@ function update() {
 
 
 
-function touched(touch) {
-	if (touch.x < WIDTH / 2) {
-		p1.gui.stick.touched(touch);
-	} else {
-		p1.gui.touched(touch);
-	}
-}
-
-
-function inputHandler() {
-
-
-
-
-	if (game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
-		p1.pos.y -= game_speed * p1.speed;
-		p1.status = "moving";
-	}
-	if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
-		p1.pos.y += game_speed * p1.speed;
-		p1.status = "moving";
-	}
-	if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
-		p1.pos.x -= game_speed * p1.speed;
-		p1.status = "moving";
-	}
-	if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
-		p1.pos.x += game_speed * p1.speed;
-		p1.status = "moving";
-	}
-
-
-	if (game.input.keyboard.isDown(Phaser.Keyboard.Q)) {
-		game.camera.scale.x += .01;
-		game.camera.scale.y += .01;
-	}
-	if (game.input.keyboard.isDown(Phaser.Keyboard.S)) {
-		game.camera.scale.x -= .01;
-		game.camera.scale.y -= .01;
-
-	}
-
-
-	if (game.input.keyboard.isDown(Phaser.Keyboard.A)) {
-		p1.attack();
-	}
-
-
-
-	if (game.input.mousePointer.isDown) {
-		if (Touch.state == ENDED)
-			Touch.state = BEGAN;
-		else
-			Touch.state = MOVING;
-
-		Touch.x = game.input.mousePointer.x;
-		Touch.y = game.input.mousePointer.y;
-		touched(Touch)
-	} else
-	if (game.input.mousePointer.isUp && Touch.state != ENDED) {
-		Touch.state = ENDED;
-		Touch.x = game.input.mousePointer.x;
-		Touch.y = game.input.mousePointer.y;
-		touched(Touch)
-	}
-	/*
-		if (game.input.pointer1.isDown)
-	    {
-	        if (Touch.state == ENDED)
-	            Touch.state = BEGAN;
-	        else
-	            Touch.state = MOVING;
-
-	        Touch.x = game.input.pointer1.x;
-	        Touch.y = game.input.pointer1.y;
-	        touched(Touch)
-	    }
-	    else
-	    if (game.input.pointer1.isUp && Touch.state != ENDED)
-	    {
-	        Touch.state = ENDED;
-	        Touch.x = game.input.pointer1.x;
-	        Touch.y = game.input.pointer1.y;
-	        touched(Touch)
-	    }*/
-
-}

@@ -9,7 +9,7 @@ sorcery.red = {
                 power: 0,
                 cost: 1,
                 castTime: 1000,
-                abilities: Array("noregeneration"),
+                abilities: new Array("noregeneration"),
                 // button;
                 icon: "♨️",
         },
@@ -24,7 +24,7 @@ sorcery.red = {
                 power: 3,
                 cost: 1,
                 castTime: 1000,
-                abilities: Array("haste", "forceattack"),
+                abilities: new Array("haste", "forceattack"),
                 // button;
                 icon: "🍁",
         },
@@ -39,7 +39,7 @@ sorcery.red = {
                 power: 0,
                 cost: 4,
                 castTime: 1000,
-                abilities: Array(),
+                abilities: new Array(),
                 // button;
                 icon: "🍁",
         },
@@ -54,7 +54,7 @@ sorcery.red = {
                 power: 0,
                 cost: 4,
                 castTime: 1000,
-                abilities: Array("betray", "haste", "forceattack"),
+                abilities: new Array("betray", "haste", "forceattack"),
                 // button;
                 icon: "🍁",
         },
@@ -69,7 +69,7 @@ sorcery.red = {
                 power: 0,
                 cost: 6,
                 castTime: 1000,
-                abilities: Array(),
+                abilities: new Array(),
                 // button;
                 icon: "🍁",
         }

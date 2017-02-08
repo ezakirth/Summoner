@@ -125,10 +125,10 @@ Hero.prototype.resolveSpell = function (spell) {
                 }
 
                 if (ability == "tranquility") {
-                    target.enchantments = Array();
+                    target.enchantments = new Array();
                 }
                 if (ability == "demistify") {
-                    target.enchantments = Array();
+                    target.enchantments = new Array();
                 }
                 if (ability == "destroy") {
                     target.life = 0;
@@ -165,5 +165,7 @@ Hero.prototype.resolveSpell = function (spell) {
  * @return void
  */
 Hero.prototype.stopcasting = function () {
+    var timer = this.timers[0];
+    if (timer) timer.started = false;
     this.timers.shift();
 }

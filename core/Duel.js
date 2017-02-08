@@ -16,7 +16,7 @@ function Duel(a, b) {
 
     this.ready = false;
     this.done = false;
-    this.timers = Array();
+    this.timers = new Array();
     this.a = a;
     this.b = b;
     this.t1 = new Timer(1000, "phase1");
@@ -93,7 +93,9 @@ Duel.prototype.endDuel = function () {
     this.done = true;
     this.a.duel = null;
     this.b.duel = null;
-    this.timers = null;
+
+    this.timers.forEach((timer) => { timer.started = false});
+    this.timers = new Array();
 
 }
 
@@ -102,7 +104,8 @@ Duel.prototype.run = function () {
 
         var timer = this.timers[0];
         if (timer) {
-            if (!timer.started) {
+            if (!timer.started)
+            {
                 timer.reset();
             }
             if (timer.isDone()) {
@@ -112,9 +115,7 @@ Duel.prototype.run = function () {
                     this.phase2();
                 }
 
-                if (this.timers) {
-                    this.timers.shift();
-                }
+                this.timers.shift();
             }
         }
     } else {

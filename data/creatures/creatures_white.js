@@ -10,7 +10,7 @@ creatures.white = {
                 speed: 1,
                 cost: 2,
                 castTime: 2000,
-                abilities: Array("firststrike"),
+                abilities: new Array("firststrike"),
                 // button;
                 icon: "👹",
         },
@@ -26,7 +26,7 @@ creatures.white = {
                 speed: 1,
                 cost: 1,
                 castTime: 1000,
-                abilities: Array("flying"),
+                abilities: new Array("flying"),
                 // button;
                 icon: "🐸",
         },
@@ -42,7 +42,7 @@ creatures.white = {
                 speed: 1,
                 cost: 3,
                 castTime: 1000,
-                abilities: Array("flying", "firststrike"),
+                abilities: new Array("flying", "firststrike"),
                 // button;
                 icon: "🐸",
         },
@@ -58,7 +58,7 @@ creatures.white = {
                 speed: 1,
                 cost: 4,
                 castTime: 1000,
-                abilities: Array("blocking", "aura friendlies 0 1"),
+                abilities: new Array("blocking", "aura friendlies 0 1"),
                 // button;
                 icon: "🐸",
         },
@@ -74,7 +74,7 @@ creatures.white = {
                 speed: 1,
                 cost: 4,
                 castTime: 1000,
-                abilities: Array("heal 2"),
+                abilities: new Array("heal 2"),
                 // button;
                 icon: "🐸",
         },
@@ -90,7 +90,7 @@ creatures.white = {
                 speed: 1,
                 cost: 5,
                 castTime: 1000,
-                abilities: Array("flying", "lifelink"),
+                abilities: new Array("flying", "lifelink"),
                 // button;
                 icon: "🐸",
         },
@@ -106,7 +106,7 @@ creatures.white = {
                 speed: 1,
                 cost: 6,
                 castTime: 1000,
-                abilities: Array("flying", "firststrike"),
+                abilities: new Array("flying", "firststrike"),
                 // button;
                 icon: "🐸",
         }

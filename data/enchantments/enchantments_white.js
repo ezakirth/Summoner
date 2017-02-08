@@ -9,7 +9,7 @@ enchantments.white = {
                 life: 0,
                 cost: 4,
                 castTime: 3000,
-                abilities: Array(),
+                abilities: new Array(),
                 // button;
                 icon: "✳️",
         },
@@ -24,7 +24,7 @@ enchantments.white = {
                 life: 0,
                 cost: 5,
                 castTime: 3000,
-                abilities: Array("divineprecense"),
+                abilities: new Array("divineprecense"),
                 // button;
                 icon: "✳️",
         }

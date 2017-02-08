@@ -8,7 +8,7 @@ specials = {
                 power: -1,
                 cost: 0,
                 castTime: 0,
-                abilities: Array()
+                abilities: new Array()
         },
 
         battlecry2: {
@@ -20,6 +20,6 @@ specials = {
                 power: -2,
                 cost: 0,
                 castTime: 0,
-                abilities: Array()
+                abilities: new Array()
         },
 };

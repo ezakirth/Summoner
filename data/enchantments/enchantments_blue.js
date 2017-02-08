@@ -9,7 +9,7 @@ enchantments.blue = {
                 life: 0,
                 cost: 4,
                 castTime: 3000,
-                abilities: Array("pendrell_mists"),
+                abilities: new Array("pendrell_mists"),
                 // button;
                 icon: "✳️",
         },
@@ -24,7 +24,7 @@ enchantments.blue = {
                 life: 0,
                 cost: 5,
                 castTime: 3000,
-                abilities: Array("spellrespawn"),
+                abilities: new Array("spellrespawn"),
                 // button;
                 icon: "✳️",
         },
