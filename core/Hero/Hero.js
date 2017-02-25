@@ -35,7 +35,7 @@ function Hero(ent, showGui) {
 
     this.status = "idle";
     // 1 = left side, -1 = right side;
-    this.side = 1;
+    this.side = (players.length == 0) ? 1 : -1;
 
     this.enchantments = new Array();
     this.auras = new Array();

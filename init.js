@@ -85,21 +85,20 @@ function create() {
 	Layers.spells.z = 3;
 
 
+    players = new Array();
     // hero;
     p1 = new Hero(heroes.basic.green, true);
+    players.push(p1);
     p2 = new Hero(heroes.basic.red);
+    players.push(p2);
+
     p1.opponent = p2;
     p2.opponent = p1;
     p1.pos = new vec2(200, 300);
     p2.pos = new vec2(WIDTH - 200, 300);
 
-    p2.side = -1;
-    p2.sprites.model.scale.x = p2.side;
 
 
-    players = new Array();
-    players.push(p1);
-    players.push(p2);
 
     crystals = new Crystals();
     duels = new Duels();

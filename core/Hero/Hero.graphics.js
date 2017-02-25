@@ -36,6 +36,7 @@ Hero.prototype.setupSprite = function()
     this.sprites.model.animations.add('attack', [36, 38, 39, 40, 43]);
     //		this.sprites.model.animations.add('attack', [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47]);
     this.sprites.model.anchor.setTo(.5, 1);
+    this.sprites.model.scale.x = this.side;
 
     this.sprites.shadow = game.add.image(this.pos.x + 5, this.pos.y + 60, 'shadow');
     this.sprites.shadow.anchor.setTo(.5, .5);
