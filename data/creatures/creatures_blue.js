@@ -10,7 +10,7 @@ creatures.blue = {
                 speed: 1,
                 cost: 3,
                 castTime: 2000,
-                abilities: new Array("flying"),
+                abilities: ["flying"],
                 // button;
                 icon: "🐉",
         },
@@ -25,7 +25,7 @@ creatures.blue = {
                 speed: 1,
                 cost: 4,
                 castTime: 2000,
-                abilities: new Array("flying"),
+                abilities: ["flying"],
                 // button;
                 icon: "🐉",
         },
@@ -40,7 +40,7 @@ creatures.blue = {
                 speed: 1,
                 cost: 5,
                 castTime: 2000,
-                abilities: new Array("flying"),
+                abilities: ["flying"],
                 // button;
                 icon: "🐉",
         },
@@ -55,7 +55,7 @@ creatures.blue = {
                 speed: 1,
                 cost: 6,
                 castTime: 2000,
-                abilities: new Array("flying"),
+                abilities: ["flying"],
                 // button;
                 icon: "🐉",
         },
@@ -71,7 +71,7 @@ creatures.blue = {
                 speed: 1,
                 cost: 2,
                 castTime: 1000,
-                abilities: new Array("blocking"),
+                abilities: ["blocking"],
                 // button;
                 icon: "🐢",
         }

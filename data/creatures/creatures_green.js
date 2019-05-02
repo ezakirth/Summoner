@@ -10,7 +10,7 @@ creatures.green = {
                 speed: 1,
                 cost: 1,
                 castTime: 1000,
-                abilities: new Array("trample"),
+                abilities: ["trample"],
                 // button;
                 icon: "👹",
         },
@@ -26,7 +26,7 @@ creatures.green = {
                 speed: 1,
                 cost: 2,
                 castTime: 2000,
-                abilities: new Array(),
+                abilities: [],
                 // button;
                 icon: "🐸",
         },
@@ -42,7 +42,7 @@ creatures.green = {
                 speed: 1,
                 cost: 1,
                 castTime: 2000,
-                abilities: new Array("fallback", "manafont_1"),
+                abilities: ["fallback", "manafont_1"],
                 // button;
                 icon: "🐸",
         },
@@ -58,7 +58,7 @@ creatures.green = {
                 speed: 1,
                 cost: 3,
                 castTime: 2000,
-                abilities: new Array("fallback", "manafont_x"),
+                abilities: ["fallback", "manafont_x"],
                 // button;
                 icon: "🐸",
         },
@@ -74,7 +74,7 @@ creatures.green = {
                 speed: 1,
                 cost: 4,
                 castTime: 2000,
-                abilities: new Array("blocking", "reach"),
+                abilities: ["blocking", "reach"],
                 // button;
                 icon: "🐸",
         },
@@ -90,7 +90,7 @@ creatures.green = {
                 speed: 1,
                 cost: 4,
                 castTime: 2000,
-                abilities: new Array("regeneration"),
+                abilities: ["regeneration"],
                 // button;
                 icon: "🐸",
         },
@@ -106,7 +106,7 @@ creatures.green = {
                 speed: 1,
                 cost: 5,
                 castTime: 2000,
-                abilities: new Array("trample", "outlast"),
+                abilities: ["trample", "outlast"],
                 // button;
                 icon: "🐸",
         },
@@ -122,7 +122,7 @@ creatures.green = {
                 speed: 1,
                 cost: 6,
                 castTime: 2000,
-                abilities: new Array("regeneration"),
+                abilities: ["regeneration"],
                 // button;
                 icon: "🐸",
         },
@@ -138,7 +138,7 @@ creatures.green = {
                 speed: 1,
                 cost: 7,
                 castTime: 2000,
-                abilities: new Array("trample"),
+                abilities: ["trample"],
                 // button;
                 icon: "🐸",
         }
